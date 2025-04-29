@@ -1,11 +1,11 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Super Pagamentos",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#0641FC",
+    "light": "#0641FC",
+    "dark": "#0641FC"
   },
   "favicon": "/favicon.svg",
   "navigation": {
@@ -82,21 +82,21 @@
   "navbar": {
     "links": [
       {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "label": "Suporte",
+        "href": "https://wa.me/+5527999971368"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "Plataforma",
+      "href": "https://dashboard.superpagamentos.com"
     }
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "instagram": "https://www.instagram.com/superpagamentos",
+      "github": "https://github.com/Super-Pagamentos",
+      "linkedin": "https://www.linkedin.com/company/super-pagamentos"
     }
   }
 }
