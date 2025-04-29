@@ -4,8 +4,6 @@
   "name": "Super Pagamentos",
   "colors": {
     "primary": "#0641FC",
-    "light": "#0641FC",
-    "dark": "#0641FC"
   },
   "favicon": "/favicon.svg",
   "navigation": {
@@ -77,7 +75,6 @@
   },
   "logo": {
     "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
   },
   "navbar": {
     "links": [
