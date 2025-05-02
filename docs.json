@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "Super Pagamentos",
   "colors": {
-      "primary": "#0641FC",
-      "light": "#0641FC",
-     "dark": "#3866f5"
+    "primary": "#0641FC",
+    "light": "#0641FC",
+    "dark": "#3866f5"
   },
   "favicon": "/favicon.svg",
   "navigation": {
@@ -55,7 +55,7 @@
           {
             "group": "Autenticação",
             "pages": [
-              "api-reference/auth",
+              "api-reference/auth"
             ]
           }
         ]
