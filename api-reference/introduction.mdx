@@ -1,33 +1,43 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: "Introdução"
+description: "Bem-vindo à documentação da API da Super Pagamentos!
+Nossa API foi desenvolvida para oferecer uma integração robusta, segura e intuitiva com a nossa plataforma de intermediação de pagamentos. Através dela, é possível criar e gerenciar subcontas, processar transações, tokenizar cartões, configurar planos de assinatura, antecipar recebiveis e muito mais. 
+"
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+### Estrutura por módulos
 
-## Welcome
+Para facilitar a navegação e a compreensão de cada parte do processo, estruturamos nossa documentação em módulos independentes, cobrindo os principais recursos disponíveis:
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+- **Autenticação**
+- **Subcontas**
+- **Contas Bancárias**
+- **Clientes**
+- **Tokenização de Cartões**
+- **Transações**
+- **Planos e Assinaturas**
+- **Saldo e Transferências**
+- **Antecipação de Recebíveis**
+- **Webhooks**
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+Cada módulo contém descrições detalhadas dos endpoints, parâmetros, exemplos de requisições e respostas esperadas.
 
-## Authentication
+### Padrões Técnicos
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+Nossa API segue os princípios RESTful, com endpoints organizados por recursos e uso dos verbos HTTP padrão (`GET`, `POST`, `PUT`, `DELETE`) para manipulação dos dados. Utilizamos códigos de status HTTP para indicar o sucesso ou falha das operações, facilitando o tratamento de erros.
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+Todas as respostas são formatadas em **JSON**, inclusive mensagens de erro. Além disso, oferecemos suporte a CORS (Cross-Origin Resource Sharing), permitindo chamadas seguras diretamente de aplicações web hospedadas em outros domínios.
+
+### Autenticação
+
+O acesso à API da Super Pagamentos é protegido por um mecanismo de autenticação baseado em **JWT (JSON Web Token)**. Para gerar um token de acesso, você deverá utilizar as credenciais disponíveis em sua **Dashboard**, compostas por uma **Public Key** e uma **Secret Key**. O token gerado deverá ser incluído no header `Authorization` de cada requisição, no formato:
+
 ```
+Authorization: Bearer {seu_token_aqui}
+```
+
+Essa abordagem garante que apenas usuários autorizados possam interagir com os recursos da API.
+
+### Próximos Passos
+
+Se esta é sua primeira vez integrando com a nossa API, recomendamos fortemente a leitura do nosso **Guia de Integração**. Ele oferece uma visão completa do fluxo de integração, com exemplos práticos e melhores práticas para cada etapa do processo.
