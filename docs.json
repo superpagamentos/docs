@@ -42,6 +42,12 @@
             "pages": [
               "api-reference/introduction"
             ]
+          },
+          {
+            "group": "Autenticação",
+            "pages": [
+              "api-reference/endpoint/auth/authentication"
+            ]
           }
         ]
       }
