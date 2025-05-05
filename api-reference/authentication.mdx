@@ -1,5 +1,133 @@
+
 ---
-title: 'New file'
-description: 'Description of your new file.'
+title: Autenticar
+description: Gere tokens JWT para autenticação segura na plataforma Super Pagamentos.
 ---
 
+import { ApiEndpoint } from "mintlify/components";
+
+<ApiEndpoint
+  method="POST"
+  path="/auth"
+  description="Esta rota autentica sua aplicação na plataforma Super Pagamentos. Ao fornecer sua publicKey e secretKey, você receberá tokens JWT (access_token e refresh_token) para uso em chamadas protegidas da API."
+  request={{
+    headers: [
+      {
+        name: "Content-Type",
+        type: "string",
+        required: true,
+        example: "application/json"
+      }
+    ],
+    body: {
+      type: "object",
+      contentType: "application/json",
+      fields: [
+        {
+          name: "publicKey",
+          type: "string",
+          required: true,
+          example: "suaPublicKeyAqui"
+        },
+        {
+          name: "secretKey",
+          type: "string",
+          required: true,
+          example: "suaSecretKeyAqui"
+        }
+      ]
+    }
+  }}
+  examples={[
+    {
+      name: "cURL",
+      code: `curl -X POST https://api.superpagamentos.com/auth \
+  -H "Content-Type: application/json" \
+  -d '{
+    "publicKey": "suaPublicKeyAqui",
+    "secretKey": "suaSecretKeyAqui"
+  }'`,
+      language: "bash"
+    },
+    {
+      name: "PHP",
+      code: `<?php
+$data = [
+  "publicKey" => "suaPublicKeyAqui",
+  "secretKey" => "suaSecretKeyAqui"
+];
+$options = [
+  'http' => [
+    'method'  => 'POST',
+    'header'  => "Content-type: application/json",
+    'content' => json_encode($data)
+  ]
+];
+$context  = stream_context_create($options);
+$result = file_get_contents('https://api.superpagamentos.com/auth', false, $context);
+echo $result;`,
+      language: "php"
+    },
+    {
+      name: "Node.js",
+      code: `const axios = require('axios');
+
+axios.post('https://api.superpagamentos.com/auth', {
+  publicKey: 'suaPublicKeyAqui',
+  secretKey: 'suaSecretKeyAqui'
+})
+.then(response => console.log(response.data))
+.catch(error => console.error(error.response.data));`,
+      language: "javascript"
+    }
+  ]}
+  responses={{
+    "200": {
+      description: "Autenticado com sucesso.",
+      body: {
+        type: "object",
+        fields: [
+          {
+            name: "data",
+            type: "object",
+            fields: [
+              {
+                name: "access_token",
+                type: "string",
+                example: "eyJhbGciOiJIUzI1NiIsInR5c..."
+              },
+              {
+                name: "refresh_token",
+                type: "string",
+                example: "eyJhbGciOiJIUzI1NiIsInR5cCI..."
+              },
+              {
+                name: "expires_in",
+                type: "string",
+                example: "3600s"
+              }
+            ]
+          },
+          {
+            name: "message",
+            type: "string",
+            example: "Autenticado com sucesso!"
+          }
+        ]
+      }
+    },
+    "400": {
+      description: "Credenciais inválidas.",
+      body: {
+        type: "object",
+        fields: [
+          {
+            name: "message",
+            type: "string",
+            example: "Credenciais inválidas."
+          }
+        ]
+      }
+    }
+  }}
+/>
