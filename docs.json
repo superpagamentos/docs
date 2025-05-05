@@ -42,15 +42,6 @@
             "pages": [
               "api-reference/introduction"
             ]
-          },
-          {
-            "group": "Autenticação",
-            "pages": [
-              {
-                "name": "Autenticar empresa",
-                "openapi": "/api-reference/authentication.mdx"
-              }
-            ]
           }
         ]
       }
