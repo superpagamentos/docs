@@ -55,7 +55,7 @@
           {
             "group": "Autenticação",
             "pages": [
-              "api-reference/endpoint/create"
+              "api-reference/endpoint/auth/create"
             ]
           }
         ]
