@@ -46,7 +46,10 @@
           {
             "group": "Autenticação",
             "pages": [
-              "api-reference/endpoint/auth/authentication"
+              {
+                "name": "Autenticar empresa",
+                "openapi": "/api-reference/openapi.yaml#/paths/~1auth/post"
+              }
             ]
           }
         ]
