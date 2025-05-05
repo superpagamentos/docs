@@ -1,9 +1,3 @@
-
----
-title: Autenticar
-description: Gere tokens JWT para autenticação segura na plataforma Super Pagamentos.
----
-
 import { ApiEndpoint } from "mintlify/components";
 
 <ApiEndpoint
@@ -41,8 +35,8 @@ import { ApiEndpoint } from "mintlify/components";
   examples={[
     {
       name: "cURL",
-      code: `curl -X POST https://api.superpagamentos.com/auth \
-  -H "Content-Type: application/json" \
+      code: `curl -X POST https://api.superpagamentos.com/auth \\
+  -H "Content-Type: application/json" \\
   -d '{
     "publicKey": "suaPublicKeyAqui",
     "secretKey": "suaSecretKeyAqui"
