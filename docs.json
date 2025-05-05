@@ -44,9 +44,18 @@
             ]
           },
           {
+            "group": "Endpoint Examples",
+            "pages": [
+              "api-reference/endpoint/get",
+              "api-reference/endpoint/create",
+              "api-reference/endpoint/delete",
+              "api-reference/endpoint/webhook"
+            ]
+          },
+          {
             "group": "Autenticação",
             "pages": [
-              "api-reference/authentication"
+              "api-reference/endpoint/auth/create"
             ]
           }
         ]

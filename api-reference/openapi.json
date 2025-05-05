@@ -1,0 +1,219 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+      "title": "OpenAPI Super APIs",
+      "description": "Documentação das APIs destinada a companhias da Super Pagamentos",
+      "license": {
+        "name": "MIT"
+      },
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "https://sandbox.superpagamentos.com"
+      }
+    ],
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "paths": {
+      "/plants": {
+        "get": {
+          "description": "Returns all plants from the system that the user has access to",
+          "parameters": [
+            {
+              "name": "limit",
+              "in": "query",
+              "description": "The maximum number of results to return",
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Plant response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Plant"
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Unexpected error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/plants/{id}": {
+        "delete": {
+          "description": "Deletes a single plant based on the ID supplied",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "ID of plant to delete",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Plant deleted",
+              "content": {}
+            },
+            "400": {
+              "description": "unexpected error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/auth": {
+        "post": {
+          "description": "Crie uma nova autenticação JWT",
+          "requestBody": {
+            "description": "Gere um token de autenticação JWT (Json Web Tokens) com duração de 3600s utilizando a sua Public Key e Secret Key. Esse token será utilizado para autenticar as demais APIs.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewPlant"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "plant response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Plant"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "unexpected error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "webhooks": {
+      "/plant/webhook": {
+        "post": {
+          "description": "Information about a new plant added to the store",
+          "requestBody": {
+            "description": "Plant added to the store",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewPlant"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Return a 200 status to indicate that the data was received successfully"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "Plant": {
+          "required": [
+            "name"
+          ],
+          "type": "object",
+          "properties": {
+            "name": {
+              "description": "The name of the plant",
+              "type": "string"
+            },
+            "tag": {
+              "description": "Tag to specify the type",
+              "type": "string"
+            }
+          }
+        },
+        "NewPlant": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Plant"
+            },
+            {
+              "required": [
+                "id"
+              ],
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "Identification number of the plant",
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          ]
+        },
+        "Error": {
+          "required": [
+            "error",
+            "message"
+          ],
+          "type": "object",
+          "properties": {
+            "error": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "message": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer"
+        }
+      }
+    }
+  }
