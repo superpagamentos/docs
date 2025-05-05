@@ -55,7 +55,7 @@
           {
             "group": "Autenticação",
             "pages": [
-              "api-reference/autenticacao/autenticar-usuario"
+              "api-reference/autenticacao/autenticarusuario"
             ]
           }
         ]
