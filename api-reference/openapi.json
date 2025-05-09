@@ -13,11 +13,6 @@
         "url": "https://sandbox.superpagamentos.com"
       }
     ],
-    "security": [
-      {
-        "bearerAuth": []
-      }
-    ],
     "paths": {
       "/plants": {
         "get": {
@@ -95,13 +90,13 @@
       },
       "/auth": {
         "post": {
-          "description": "Crie uma nova autenticação JWT",
+          "description": "A rota `/auth` gera tokens JWT com duração de 3600 segundos. Com esses tokens é possível autenticar as demais rotas da aplicação para.\n\n Recomenda-se **nunca armazenar as chaves em ambientes front-end**, sempre utilizar em **ambientes protegidos por um certificado SSL** e **NUNCA compartilhar suas credenciais** com outras pessoas (nem mesmo do Suporte da Super).",
           "requestBody": {
             "description": "Gere um token de autenticação JWT (Json Web Tokens) com duração de 3600s utilizando a sua Public Key e Secret Key. Esse token será utilizado para autenticar as demais APIs.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NewPlant"
+                  "$ref": "#/components/schemas/authenticate"
                 }
               }
             },
@@ -109,11 +104,37 @@
           },
           "responses": {
             "200": {
-              "description": "plant response",
+              "description": "Autenticação realizada com sucesso",
               "content": {
                 "application/json": {
                   "schema": {
-                    "$ref": "#/components/schemas/Plant"
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "access_token": {
+                            "description": "Esse token será utilizado para autenticar as demais APIs.",
+                            "type": "string",
+                            "example": "<access_token>"
+                          },
+                          "refresh_token": {
+                            "description": "Esse token será utilizado para atualizar o token de acesso.",
+                            "type": "string",
+                            "example": "<refresh_token>"
+                          },
+                          "expires_in": {
+                            "description": "Duração do token de acesso em segundos.",
+                            "type": "string",
+                            "example": "3600s"
+                          }
+                        }
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Usuário autenticado com sucesso"
+                      }
+                    }
                   }
                 }
               }
@@ -123,7 +144,29 @@
               "content": {
                 "application/json": {
                   "schema": {
-                    "$ref": "#/components/schemas/Error"
+                    "$ref": "#/components/schemas/authenticateErrorResponse"
+                  },
+                  "examples": {
+                    "Credenciais inválidas": {
+                      "value": {
+                        "data": {
+                          "message": "As credenciais fornecidas são inválidas",
+                          "returnCode": -1000
+                        }
+                      }
+                    },
+                    "Campos não informados": {
+                      "value": {
+                        "data": {
+                          "message": [
+                            "A privateKey está em um formato incorreto",
+                            "privateKey must be a string"
+                          ],
+                          "error": "Bad Request",
+                          "statusCode": 400
+                        }
+                      }
+                    }
                   }
                 }
               }
@@ -156,6 +199,59 @@
     },
     "components": {
       "schemas": {
+        "authenticate": {
+          "allOf": [
+            {
+              "type": "object",
+              "properties": {
+                "publicKey": {
+                  "description": "Chave pública utilizada para identificar a empresa.",
+                  "type": "string",
+                  "example": "SP-PublicKey"
+                },
+                "privateKey": {
+                  "description": "Chave secreta utilizada para autenticar uma chave pública.",
+                  "type": "string",
+                  "example": "SP-SecretKey"
+                }
+              }
+            }
+          ]
+        },
+        "authenticateErrorResponse": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  ]
+                },
+                "returnCode": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "error": {
+                  "type": "string"
+                },
+                "statusCode": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        },
         "Plant": {
           "required": [
             "name"
