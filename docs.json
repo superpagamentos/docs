@@ -4,7 +4,7 @@
   "name": "Super Pagamentos",
   "colors": {
     "primary": "#0641FC",
-    "light": "#0641FC",
+    "light": "#0975e0",
     "dark": "#3866f5"
   },
   "favicon": "/favicon.svg",
@@ -14,11 +14,9 @@
         "tab": "Guia de implementação",
         "groups": [
           {
-            "group": "Get Started",
+            "group": "Bem-vindo",
             "pages": [
-              "introduction",
-              "quickstart",
-              "development"
+              "introduction"
             ]
           },
           {
@@ -44,18 +42,15 @@
             ]
           },
           {
-            "group": "Endpoint Examples",
-            "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
-            ]
-          },
-          {
             "group": "Autenticação",
             "pages": [
               "api-reference/endpoint/authentication/auth"
+            ]
+          },
+          {
+            "group": "Contas Bancárias",
+            "pages": [
+              "api-reference/endpoint/bank_accounts/create"
             ]
           }
         ]

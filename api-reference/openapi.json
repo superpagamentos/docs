@@ -14,80 +14,6 @@
       }
     ],
     "paths": {
-      "/plants": {
-        "get": {
-          "description": "Returns all plants from the system that the user has access to",
-          "parameters": [
-            {
-              "name": "limit",
-              "in": "query",
-              "description": "The maximum number of results to return",
-              "schema": {
-                "type": "integer",
-                "format": "int32"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Plant response",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/Plant"
-                    }
-                  }
-                }
-              }
-            },
-            "400": {
-              "description": "Unexpected error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/Error"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/plants/{id}": {
-        "delete": {
-          "description": "Deletes a single plant based on the ID supplied",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "description": "ID of plant to delete",
-              "required": true,
-              "schema": {
-                "type": "integer",
-                "format": "int64"
-              }
-            }
-          ],
-          "responses": {
-            "204": {
-              "description": "Plant deleted",
-              "content": {}
-            },
-            "400": {
-              "description": "unexpected error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/Error"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
       "/auth": {
         "post": {
           "description": "A rota `/auth` gera tokens JWT com duração de 3600 segundos. Com esses tokens é possível autenticar as demais rotas da aplicação para.\n\n Recomenda-se **nunca armazenar as chaves em ambientes front-end**, sempre utilizar em **ambientes protegidos por um certificado SSL** e **NUNCA compartilhar suas credenciais** com outras pessoas (nem mesmo do Suporte da Super).",
@@ -173,25 +99,68 @@
             }
           }
         }
-      }
-    },
-    "webhooks": {
-      "/plant/webhook": {
+      },
+
+      "/bank_accounts": {
         "post": {
-          "description": "Information about a new plant added to the store",
+          "description": "Crie uma nova conta bancária para a empresa.\n\nA criação de uma conta bancária é **essencial para realizar saques** dos valores recebidos através da Super Pagamentos. \n\n**Importante:** A conta bancária deve obrigatoriamente pertencer ao mesmo titular/CNPJ da conta na Super Pagamentos. Contas bancárias de terceiros não são aceitas por questões de segurança e conformidade.\n\n**Tipos de conta aceitos:**\n- Conta Corrente\n- Conta Poupança\n\n**Documentação necessária:**\n- A conta bancária deve estar no mesmo nome/CNPJ cadastrado na Super Pagamentos\n- Todos os dados bancários devem estar corretos e atualizados",
           "requestBody": {
-            "description": "Plant added to the store",
+            "description": "Dados necessários para criação de uma conta bancária",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NewPlant"
+                  "$ref": "#/components/schemas/createBankAccount"
                 }
               }
-            }
+            },
+            "required": true
           },
           "responses": {
             "200": {
-              "description": "Return a 200 status to indicate that the data was received successfully"
+              "description": "Conta bancária criada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/bankAccountResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro na criação da conta bancária",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/bankAccountErrorResponse"
+                  },
+                  "examples": {
+                    "Campos não informados": {
+                      "value": {
+                        "data": {
+                          "message": [
+                            "O nome do beneficiário \"holderName\" deve ser um texto válido",
+                            "O nome do beneficiário \"holderName\" é obrigatório",
+                            "O código do banco \"bankCode\" deve ser um texto válido",
+                            "O código do banco \"bankCode\" é obrigatório",
+                            "O tipo de conta \"accountType\" deve ser CHECKING ou SAVINGS",
+                            "O tipo de conta \"accountType\" é obrigatório",
+                            "O número da conta \"accountNumber\" deve estar no formato conta-dv (ex: 12345-6)",
+                            "O número da conta \"accountNumber\" deve ser um texto válido",
+                            "O número da conta \"accountNumber\" é obrigatório",
+                            "O número da agência \"routingNumber\" deve estar no formato agência-dv (ex: 0001-0)",
+                            "O número da agência \"routingNumber\" deve ser um texto válido",
+                            "O número da agência \"routingNumber\" é obrigatório",
+                            "O documento \"document\" deve ser um texto válido",
+                            "O documento \"document\" (CPF/CNPJ) é obrigatório"
+                          ],
+                          "error": "Bad Request",
+                          "statusCode": 400
+                        }
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -252,55 +221,121 @@
             }
           }
         },
-        "Plant": {
-          "required": [
-            "name"
-          ],
+
+        "createBankAccount": {
           "type": "object",
+          "required": [
+            "holderName",
+            "bankCode",
+            "routingNumber",
+            "accountNumber",
+            "accountType",
+            "holderName",
+            "document"
+          ],
           "properties": {
-            "name": {
-              "description": "The name of the plant",
-              "type": "string"
+            "holderName": {
+              "description": "Nome do benefíciario da conta",
+              "type": "string",
+              "example": "EMPRESA EXEMPLO LTDA"
             },
-            "tag": {
-              "description": "Tag to specify the type",
-              "type": "string"
+            "bankCode": {
+              "description": "Código do banco",
+              "type": "string",
+              "example": "001"
+            },
+            "routingNumber": {
+              "description": "Número da agência com dígito verificador.Se não possuir DV, coloque 0 após o hífen",
+              "type": "string",
+              "example": "1234-0"
+            },
+            "accountNumber": {
+              "description": "Número da conta com dígito verificador. Se não possuir DV, coloque 0 após o hífen",
+              "type": "string",
+              "example": "123456-78"
+            },
+            "accountType": {
+              "description": "Tipo da conta bancária",
+              "type": "string",
+              "enum": ["SAVINGS", "CHECKING"],
+              "example": "SAVINGS"
+            },
+            "document": {
+              "description": "CPF ou CNPJ do benefíciario da conta",
+              "type": "string",
+              "example": "12345678901"
             }
           }
         },
-        "NewPlant": {
-          "allOf": [
-            {
-              "$ref": "#/components/schemas/Plant"
-            },
-            {
-              "required": [
-                "id"
-              ],
+        "bankAccountResponse": {
+          "type": "object",
+          "properties": {
+            "data": {
               "type": "object",
               "properties": {
                 "id": {
-                  "description": "Identification number of the plant",
                   "type": "integer",
-                  "format": "int64"
+                  "example": 123
+                },
+                "banco": {
+                  "type": "string",
+                  "example": "001"
+                },
+                "agencia": {
+                  "type": "string",
+                  "example": "1234"
+                },
+                "conta": {
+                  "type": "string",
+                  "example": "567890"
+                },
+                "tipoConta": {
+                  "type": "string",
+                  "example": "corrente"
+                },
+                "status": {
+                  "type": "string",
+                  "example": "ativa"
                 }
               }
-            }
-          ]
-        },
-        "Error": {
-          "required": [
-            "error",
-            "message"
-          ],
-          "type": "object",
-          "properties": {
-            "error": {
-              "type": "integer",
-              "format": "int32"
             },
             "message": {
-              "type": "string"
+              "type": "string",
+              "example": "Conta bancária criada com sucesso"
+            }
+          }
+        },
+        "bankAccountErrorResponse": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  ]
+                },
+                "returnCode": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "error": {
+                  "type": "string"
+                },
+                "statusCode": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
             }
           }
         }
