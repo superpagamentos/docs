@@ -104,6 +104,11 @@
       "/bank_accounts": {
         "post": {
           "description": "Crie uma nova conta bancária para a empresa.\n\nA criação de uma conta bancária é **essencial para realizar saques** dos valores recebidos através da Super Pagamentos. \n\n**Importante:** A conta bancária deve obrigatoriamente pertencer ao mesmo titular/CNPJ da conta na Super Pagamentos. Contas bancárias de terceiros não são aceitas por questões de segurança e conformidade.\n\n**Tipos de conta aceitos:**\n- Conta Corrente\n- Conta Poupança\n\n**Documentação necessária:**\n- A conta bancária deve estar no mesmo nome/CNPJ cadastrado na Super Pagamentos\n- Todos os dados bancários devem estar corretos e atualizados",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
           "requestBody": {
             "description": "Dados necessários para criação de uma conta bancária",
             "content": {
@@ -281,29 +286,33 @@
             "data": {
               "type": "object",
               "properties": {
-                "id": {
-                  "type": "integer",
-                  "example": 123
+                "holderName": {
+                  "type": "string",
+                  "example": "Empresa Teste LTDA"
                 },
-                "banco": {
+                "bankCode": {
                   "type": "string",
                   "example": "001"
                 },
-                "agencia": {
+                "routingNumber": {
                   "type": "string",
-                  "example": "1234"
+                  "example": "0001-00"
                 },
-                "conta": {
+                "accountNumber": {
                   "type": "string",
-                  "example": "567890"
+                  "example": "12345678-00"
                 },
-                "tipoConta": {
+                "document": {
                   "type": "string",
-                  "example": "corrente"
+                  "example": "00000000000"
+                },
+                "accountType": {
+                  "type": "string",
+                  "example": "CHECKING"
                 },
                 "status": {
                   "type": "string",
-                  "example": "ativa"
+                  "example": "APPROVED"
                 }
               }
             },
@@ -351,7 +360,8 @@
       "securitySchemes": {
         "bearerAuth": {
           "type": "http",
-          "scheme": "bearer"
+          "scheme": "bearer",
+          "description": "Token JWT gerado na rota de autenticação (/auth). Deve ser enviado no formato: Bearer <token>"
         }
       }
     }
