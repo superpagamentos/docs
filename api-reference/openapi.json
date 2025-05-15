@@ -157,6 +157,14 @@
                           "statusCode": 400
                         }
                       }
+                    },
+                    "Erro genérico": {
+                      "value": {
+                        "data": {
+                          "message": "Erro ao criar conta bancária. Verifique os dados informados ou entre em contato com o suporte.",
+                          "returnCode": -7000
+                        }
+                      }
                     }
                   }
                 }
