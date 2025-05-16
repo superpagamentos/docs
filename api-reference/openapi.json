@@ -176,6 +176,51 @@
               }
             }
           }
+        },
+        "get": {
+          "description": "Lista todas as contas bancárias cadastradas para a empresa. A resposta inclui informações detalhadas de cada conta, como dados do titular, dados bancários e status da conta. Os resultados são paginados para melhor performance.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "page",
+              "in": "query",
+              "description": "Número da página que deseja visualizar",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "default": 1,
+                "minimum": 1
+              }
+            },
+            {
+              "name": "limit",
+              "in": "query",
+              "description": "Quantidade de itens por página",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "default": 10,
+                "minimum": 1,
+                "maximum": 100
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Listagem de contas bancárias",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/listBankAccountsResponse"
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -353,6 +398,96 @@
                   "format": "int32"
                 }
               }
+            }
+          }
+        },
+        "listBankAccountsResponse": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Lista de contas bancárias",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "description": "Identificador único da conta bancária",
+                    "type": "integer",
+                    "example": 1237864
+                  },
+                  "holderName": {
+                    "description": "Nome do beneficiário da conta",
+                    "type": "string",
+                    "example": "Empresa Teste LTDA"
+                  },
+                  "bankCode": {
+                    "description": "Código do banco",
+                    "type": "string",
+                    "example": "001"
+                  },
+                  "routingNumber": {
+                    "description": "Número da agência com dígito verificador",
+                    "type": "string",
+                    "example": "0001-00"
+                  },
+                  "accountNumber": {
+                    "description": "Número da conta com dígito verificador",
+                    "type": "string",
+                    "example": "12345678-00"
+                  },
+                  "document": {
+                    "description": "CPF ou CNPJ do beneficiário da conta",
+                    "type": "string",
+                    "example": "59163721000165"
+                  },
+                  "accountType": {
+                    "description": "Tipo da conta bancária",
+                    "type": "string",
+                    "example": "CHECKING"
+                  },
+                  "status": {
+                    "description": "Status atual da conta bancária",
+                    "type": "string",
+                    "example": "APPROVED"
+                  },
+                  "createdAt": {
+                    "description": "Data e hora de criação da conta bancária",
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2025-05-15T20:54:35.106Z"
+                  }
+                }
+              }
+            },
+            "meta": {
+              "description": "Dados de paginação",
+              "type": "object",
+              "properties": {
+                "total": {
+                  "description": "Total de contas bancárias cadastradas",
+                  "type": "integer",
+                  "example": 11
+                },
+                "page": {
+                  "description": "Página atual da listagem",
+                  "type": "integer",
+                  "example": 1
+                },
+                "limit": {
+                  "description": "Quantidade de itens por página",
+                  "type": "integer",
+                  "example": 10
+                },
+                "totalPages": {
+                  "description": "Total de páginas disponíveis",
+                  "type": "integer",
+                  "example": 2
+                }
+              }
+            },
+            "message": {
+              "type": "string",
+              "example": "Listagem de contas bancárias"
             }
           }
         }

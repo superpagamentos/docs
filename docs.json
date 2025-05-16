@@ -50,7 +50,8 @@
           {
             "group": "Contas Bancárias",
             "pages": [
-              "api-reference/endpoint/bank_accounts/create"
+              "api-reference/endpoint/bank_accounts/create",
+              "api-reference/endpoint/bank_accounts/list"
             ]
           }
         ]
