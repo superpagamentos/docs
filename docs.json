@@ -48,12 +48,60 @@
             ]
           },
           {
+            "group": "Subcontas",
+            "pages": [
+              "api-reference/endpoint/subaccounts/create"
+            ]
+          },
+          {
             "group": "Contas Bancárias",
             "pages": [
               "api-reference/endpoint/bank_accounts/create",
               "api-reference/endpoint/bank_accounts/list",
               "api-reference/endpoint/bank_accounts/get",
               "api-reference/endpoint/bank_accounts/delete"
+            ]
+          },
+          {
+            "group": "Clientes",
+            "pages": [
+              "api-reference/endpoint/customers/create"
+            ]
+          },
+          {
+            "group": "Tokenização de Cartões",
+            "pages": [
+              "api-reference/endpoint/card_tokens/create"
+            ]
+          },
+          {
+            "group": "Transações",
+            "pages": [
+              "api-reference/endpoint/transactions/create"
+            ]
+          },
+          {
+            "group": "Planos e Assinaturas",
+            "pages": [
+              "api-reference/endpoint/plans/create"
+            ]
+          },
+          {
+            "group": "Saldo e Transferências",
+            "pages": [
+              "api-reference/endpoint/balances/get"
+            ]
+          },
+          {
+            "group": "Antecipações de Recebíveis",
+            "pages": [
+              "api-reference/endpoint/receivable_advances/create"
+            ]
+          },
+          {
+            "group": "Webhooks",
+            "pages": [
+              "api-reference/endpoint/webhooks/create"
             ]
           }
         ]
