@@ -274,6 +274,57 @@
               }
             }
           }
+        },
+        "delete": {
+          "description": "Remove uma conta bancária específica que pertence à empresa cadastrada. Esta operação é irreversível e deve ser utilizada com cautela.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "bankAccountId",
+              "in": "path",
+              "description": "Identificador único da conta bancária",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Conta bancária deletada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/deleteBankAccountResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro ao deletar conta bancária",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/bankAccountErrorResponse"
+                  },
+                  "examples": {
+                    "Conta não encontrada": {
+                      "value": {
+                        "data": {
+                          "message": "Conta bancária não encontrada",
+                          "returnCode": -7100
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -602,6 +653,25 @@
             "message": {
               "type": "string",
               "example": "Conta bancária encontrada com sucesso"
+            }
+          }
+        },
+        "deleteBankAccountResponse": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "Mensagem de confirmação da exclusão",
+                  "type": "string",
+                  "example": "Conta bancária deletada com sucesso"
+                }
+              }
+            },
+            "message": {
+              "type": "string",
+              "example": "Conta bancária deletada com sucesso"
             }
           }
         }
