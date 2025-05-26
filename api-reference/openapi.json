@@ -326,6 +326,87 @@
             }
           }
         }
+      },
+      "/subaccount/pf": {
+        "post": {
+          "description": "Cria uma nova subconta do tipo Pessoa Física. Com esta subconta, você poderá gerenciar contas bancárias, clientes, planos, assinaturas e realizar split de pagamentos de forma independente.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "requestBody": {
+            "description": "Dados necessários para criação de uma subconta PF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/createSubaccountPF"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Subconta criada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/subaccountPFResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro na criação da subconta",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/subaccountErrorResponse"
+                  },
+                  "examples": {
+                    "Erro não mapeado": {
+                      "value": {
+                        "data": {
+                          "message": "Erro ao criar subconta PF",
+                          "returnCode": -7302
+                        }
+                      }
+                    },
+                    "Subconta já cadastrada": {
+                      "value": {
+                        "data": {
+                          "message": "Esta conta já está cadastrada como subconta para sua companhia",
+                          "returnCode": -7300
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Não autorizado",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/subaccountErrorResponse"
+                  },
+                  "examples": {
+                    "Não autenticado": {
+                      "value": {
+                        "data": {
+                          "message": "Unauthorized",
+                          "statusCode": 401
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "components": {
@@ -672,6 +753,399 @@
             "message": {
               "type": "string",
               "example": "Conta bancária deletada com sucesso"
+            }
+          }
+        },
+        "createSubaccountPF": {
+          "type": "object",
+          "required": [
+            "name",
+            "juridicDataPartner",
+            "addresses",
+            "accountBank"
+          ],
+          "properties": {
+            "name": {
+              "description": "Nome da subconta",
+              "type": "string",
+              "example": "Subconta"
+            },
+            "juridicDataPartner": {
+              "type": "object",
+              "required": [
+                "name",
+                "lastName",
+                "cpf",
+                "email",
+                "birthdate",
+                "contactPhone",
+                "monthRevenue",
+                "jobOccupation",
+                "fullnameMom"
+              ],
+              "properties": {
+                "name": {
+                  "description": "Nome do titular da subconta",
+                  "type": "string",
+                  "example": "João"
+                },
+                "lastName": {
+                  "description": "Sobrenome do titular da subconta",
+                  "type": "string",
+                  "example": "Silva"
+                },
+                "cpf": {
+                  "description": "CPF do titular da subconta",
+                  "type": "string",
+                  "example": "00000000000"
+                },
+                "email": {
+                  "description": "Email do titular da subconta",
+                  "type": "string",
+                  "format": "email",
+                  "example": "email@email.com"
+                },
+                "birthdate": {
+                  "description": "Data de nascimento do titular da subconta",
+                  "type": "string",
+                  "format": "date",
+                  "example": "1990-05-20"
+                },
+                "contactPhone": {
+                  "description": "Telefone de contato do titular da subconta",
+                  "type": "string",
+                  "example": "(00) 00000-0000"
+                },
+                "monthRevenue": {
+                  "description": "Renda mensal do titular da subconta",
+                  "type": "number",
+                  "example": 10000
+                },
+                "jobOccupation": {
+                  "description": "Ocupação profissional do titular da subconta",
+                  "type": "string",
+                  "example": "Diretor Financeiro"
+                },
+                "fullnameMom": {
+                  "description": "Nome completo da mãe do titular da subconta",
+                  "type": "string",
+                  "example": "Maria Silva"
+                }
+              }
+            },
+            "addresses": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "entityType",
+                  "addressType",
+                  "zipcode",
+                  "street",
+                  "streetNumber",
+                  "neighborhood",
+                  "city",
+                  "state"
+                ],
+                "properties": {
+                  "entityType": {
+                    "description": "Tipo da entidade do endereço",
+                    "type": "string",
+                    "enum": ["COMPANY"],
+                    "example": "COMPANY"
+                  },
+                  "addressType": {
+                    "description": "Tipo do endereço",
+                    "type": "string",
+                    "enum": ["RESPONSIBLE"],
+                    "example": "RESPONSIBLE"
+                  },
+                  "zipcode": {
+                    "description": "CEP do endereço",
+                    "type": "integer",
+                    "example": 87654321
+                  },
+                  "street": {
+                    "description": "Nome da rua",
+                    "type": "string",
+                    "example": "Rua B"
+                  },
+                  "streetNumber": {
+                    "description": "Número do endereço",
+                    "type": "integer",
+                    "example": 200
+                  },
+                  "complement": {
+                    "description": "Complemento do endereço",
+                    "type": "string",
+                    "example": "Casa 10"
+                  },
+                  "reference": {
+                    "description": "Ponto de referência do endereço",
+                    "type": "string",
+                    "example": "Ao lado da padaria"
+                  },
+                  "neighborhood": {
+                    "description": "Bairro do endereço",
+                    "type": "string",
+                    "example": "Jardins"
+                  },
+                  "city": {
+                    "description": "Cidade do endereço",
+                    "type": "string",
+                    "example": "São Paulo"
+                  },
+                  "state": {
+                    "description": "Estado do endereço",
+                    "type": "string",
+                    "example": "SP"
+                  }
+                }
+              }
+            },
+            "accountBank": {
+              "type": "object",
+              "required": [
+                "holderName",
+                "bankCode",
+                "accountType",
+                "accountNumber",
+                "routingNumber",
+                "document"
+              ],
+              "properties": {
+                "holderName": {
+                  "description": "Nome do titular da conta bancária",
+                  "type": "string",
+                  "example": "Empresa Teste LTDA"
+                },
+                "bankCode": {
+                  "description": "Código do banco",
+                  "type": "string",
+                  "example": "001"
+                },
+                "accountType": {
+                  "description": "Tipo da conta bancária",
+                  "type": "string",
+                  "enum": ["CHECKING", "SAVINGS"],
+                  "example": "CHECKING"
+                },
+                "accountNumber": {
+                  "description": "Número da conta com dígito verificador",
+                  "type": "string",
+                  "example": "12345678-00"
+                },
+                "routingNumber": {
+                  "description": "Número da agência com dígito verificador",
+                  "type": "string",
+                  "example": "0001-00"
+                },
+                "document": {
+                  "description": "CPF do titular da conta bancária",
+                  "type": "string",
+                  "example": "00000000000"
+                }
+              }
+            }
+          }
+        },
+        "subaccountPFResponse": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "Identificador único da subconta",
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "6c426366-4395-4f3c-8b1e-b15dece967b6"
+                },
+                "name": {
+                  "description": "Nome da subconta",
+                  "type": "string",
+                  "example": "EMPRESA EXEMPLO LTDA"
+                },
+                "juridicDataPartner": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "description": "Nome do titular da subconta",
+                      "type": "string",
+                      "example": "João"
+                    },
+                    "lastName": {
+                      "description": "Sobrenome do titular da subconta",
+                      "type": "string",
+                      "example": "Silva"
+                    },
+                    "cpf": {
+                      "description": "CPF do titular da subconta",
+                      "type": "string",
+                      "example": "00000000000"
+                    },
+                    "email": {
+                      "description": "Email do titular da subconta",
+                      "type": "string",
+                      "format": "email",
+                      "example": "vitorlauvresbarroso2@gmail.com"
+                    },
+                    "birthdate": {
+                      "description": "Data de nascimento do titular da subconta",
+                      "type": "string",
+                      "format": "date",
+                      "example": "1990-05-20"
+                    },
+                    "contactPhone": {
+                      "description": "Telefone de contato do titular da subconta",
+                      "type": "string",
+                      "example": "(11) 98765-4321"
+                    },
+                    "monthRevenue": {
+                      "description": "Renda mensal do titular da subconta",
+                      "type": "number",
+                      "example": 50000
+                    },
+                    "jobOccupation": {
+                      "description": "Ocupação profissional do titular da subconta",
+                      "type": "string",
+                      "example": "Diretor Financeiro"
+                    },
+                    "fullnameMom": {
+                      "description": "Nome completo da mãe do titular da subconta",
+                      "type": "string",
+                      "example": "Maria Silva"
+                    }
+                  }
+                },
+                "addresses": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "zipcode": {
+                        "description": "CEP do endereço",
+                        "type": "integer",
+                        "example": 87654321
+                      },
+                      "street": {
+                        "description": "Nome da rua",
+                        "type": "string",
+                        "example": "Rua B"
+                      },
+                      "streetNumber": {
+                        "description": "Número do endereço",
+                        "type": "integer",
+                        "example": 200
+                      },
+                      "complement": {
+                        "description": "Complemento do endereço",
+                        "type": "string",
+                        "example": "Casa 10"
+                      },
+                      "reference": {
+                        "description": "Ponto de referência do endereço",
+                        "type": "string",
+                        "example": "Ao lado da padaria"
+                      },
+                      "neighborhood": {
+                        "description": "Bairro do endereço",
+                        "type": "string",
+                        "example": "Jardins"
+                      },
+                      "city": {
+                        "description": "Cidade do endereço",
+                        "type": "string",
+                        "example": "São Paulo"
+                      },
+                      "state": {
+                        "description": "Estado do endereço",
+                        "type": "string",
+                        "example": "SP"
+                      }
+                    }
+                  }
+                },
+                "accountBank": {
+                  "type": "object",
+                  "properties": {
+                    "holderName": {
+                      "description": "Nome do titular da conta bancária",
+                      "type": "string",
+                      "example": "Empresa Teste LTDA"
+                    },
+                    "bankCode": {
+                      "description": "Código do banco",
+                      "type": "string",
+                      "example": "001"
+                    },
+                    "accountType": {
+                      "description": "Tipo da conta bancária",
+                      "type": "string",
+                      "enum": ["CHECKING", "SAVINGS"],
+                      "example": "CHECKING"
+                    },
+                    "accountNumber": {
+                      "description": "Número da conta com dígito verificador",
+                      "type": "string",
+                      "example": "12345678-00"
+                    },
+                    "routingNumber": {
+                      "description": "Número da agência com dígito verificador",
+                      "type": "string",
+                      "example": "0001-00"
+                    },
+                    "document": {
+                      "description": "CPF do titular da conta bancária",
+                      "type": "string",
+                      "example": "00000000000"
+                    }
+                  }
+                },
+                "status": {
+                  "description": "Status atual da subconta",
+                  "type": "string",
+                  "example": "PENDING"
+                }
+              }
+            },
+            "message": {
+              "type": "string",
+              "example": "Subconta PF criada com sucesso"
+            }
+          }
+        },
+        "subaccountErrorResponse": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  ]
+                },
+                "returnCode": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "error": {
+                  "type": "string"
+                },
+                "statusCode": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
             }
           }
         }
