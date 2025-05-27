@@ -988,7 +988,7 @@
                       "description": "Email do titular da subconta",
                       "type": "string",
                       "format": "email",
-                      "example": "vitorlauvresbarroso2@gmail.com"
+                      "example": "email@email.com"
                     },
                     "birthdate": {
                       "description": "Data de nascimento do titular da subconta",
@@ -999,7 +999,7 @@
                     "contactPhone": {
                       "description": "Telefone de contato do titular da subconta",
                       "type": "string",
-                      "example": "(11) 98765-4321"
+                      "example": "(00) 00000-0000"
                     },
                     "monthRevenue": {
                       "description": "Renda mensal do titular da subconta",
