@@ -574,6 +574,60 @@
             }
           }
         }
+      },
+      "/subaccounts/{subaccountId}": {
+        "get": {
+          "description": "Busca os dados de uma subconta específica que pertence à empresa cadastrada. A resposta inclui informações detalhadas da subconta, como dados do responsável legal, dados jurídicos (para PJ), endereços e status da conta.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "subaccountId",
+              "in": "path",
+              "description": "Identificador único da subconta",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Subconta encontrada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/getSubaccountResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro ao buscar subconta",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/subaccountErrorResponse"
+                  },
+                  "examples": {
+                    "Subconta não encontrada": {
+                      "value": {
+                        "data": {
+                          "message": "Subconta não encontrada",
+                          "returnCode": -7301
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "components": {
@@ -1978,6 +2032,194 @@
             "message": {
               "type": "string",
               "example": "Listagem de subcontas"
+            }
+          }
+        },
+        "getSubaccountResponse": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "Identificador único da subconta",
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "51bfa0f3-72f7-409f-8ac4-77b4611494b6"
+                },
+                "createdAt": {
+                  "description": "Data e hora de criação da subconta",
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2025-05-28T18:06:43.846Z"
+                },
+                "name": {
+                  "description": "Nome da subconta",
+                  "type": "string",
+                  "example": "Empresa Teste LTDA"
+                },
+                "status": {
+                  "description": "Status atual da subconta",
+                  "type": "string",
+                  "example": "PENDING"
+                },
+                "companyType": {
+                  "description": "Tipo da subconta (PF ou PJ)",
+                  "type": "string",
+                  "enum": ["PF", "PJ"],
+                  "example": "PJ"
+                },
+                "juridicDataPartner": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "description": "Nome do responsável legal",
+                      "type": "string",
+                      "example": "João"
+                    },
+                    "lastName": {
+                      "description": "Sobrenome do responsável legal",
+                      "type": "string",
+                      "example": "Silva"
+                    },
+                    "cpf": {
+                      "description": "CPF do responsável legal",
+                      "type": "string",
+                      "example": "00000000000"
+                    },
+                    "email": {
+                      "description": "Email do responsável legal",
+                      "type": "string",
+                      "format": "email",
+                      "example": "email@email.com"
+                    },
+                    "birthdate": {
+                      "description": "Data de nascimento do responsável legal",
+                      "type": "string",
+                      "format": "date",
+                      "example": "1990-05-20"
+                    },
+                    "contactPhone": {
+                      "description": "Telefone de contato do responsável legal",
+                      "type": "string",
+                      "example": "(00) 00000-0000"
+                    },
+                    "monthRevenue": {
+                      "description": "Renda mensal do responsável legal",
+                      "type": "number",
+                      "example": 50000
+                    },
+                    "jobOccupation": {
+                      "description": "Ocupação profissional do responsável legal",
+                      "type": "string",
+                      "example": "Diretor Financeiro"
+                    },
+                    "fullnameMom": {
+                      "description": "Nome completo da mãe do responsável legal",
+                      "type": "string",
+                      "example": "Maria Silva"
+                    }
+                  }
+                },
+                "juridicLegalData": {
+                  "type": "object",
+                  "properties": {
+                    "cnpj": {
+                      "description": "CNPJ da empresa",
+                      "type": "string",
+                      "example": "00000000000000"
+                    },
+                    "contactPhone": {
+                      "description": "Telefone de contato da empresa",
+                      "type": "string",
+                      "example": "(00) 00000-0000"
+                    },
+                    "fantasyName": {
+                      "description": "Nome fantasia da empresa",
+                      "type": "string",
+                      "example": "Empresa Exemplo Ltda"
+                    },
+                    "socialReason": {
+                      "description": "Razão social da empresa",
+                      "type": "string",
+                      "example": "Empresa Exemplo LTDA"
+                    },
+                    "avgAnualBilling": {
+                      "description": "Faturamento anual médio da empresa",
+                      "type": "number",
+                      "example": 1000000
+                    },
+                    "searchingServices": {
+                      "description": "Serviços que a empresa busca",
+                      "type": "string",
+                      "example": "Consultoria Financeira"
+                    },
+                    "socialMedia": {
+                      "description": "Rede social da empresa",
+                      "type": "string",
+                      "example": "@empresaexemplo"
+                    }
+                  }
+                },
+                "addresses": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "addressType": {
+                        "description": "Tipo do endereço",
+                        "type": "string",
+                        "enum": ["COMMERCIAL", "RESPONSIBLE"],
+                        "example": "COMMERCIAL"
+                      },
+                      "zipcode": {
+                        "description": "CEP do endereço",
+                        "type": "integer",
+                        "example": 12345678
+                      },
+                      "street": {
+                        "description": "Nome da rua",
+                        "type": "string",
+                        "example": "Rua A"
+                      },
+                      "streetNumber": {
+                        "description": "Número do endereço",
+                        "type": "integer",
+                        "example": 100
+                      },
+                      "complement": {
+                        "description": "Complemento do endereço",
+                        "type": "string",
+                        "example": "Sala 5"
+                      },
+                      "reference": {
+                        "description": "Ponto de referência do endereço",
+                        "type": "string",
+                        "example": "Próximo ao Shopping"
+                      },
+                      "neighborhood": {
+                        "description": "Bairro do endereço",
+                        "type": "string",
+                        "example": "Centro"
+                      },
+                      "city": {
+                        "description": "Cidade do endereço",
+                        "type": "string",
+                        "example": "São Paulo"
+                      },
+                      "state": {
+                        "description": "Estado do endereço",
+                        "type": "string",
+                        "example": "SP"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "message": {
+              "type": "string",
+              "example": "Subconta encontrada com sucesso"
             }
           }
         }
