@@ -327,7 +327,7 @@
           }
         }
       },
-      "/subaccount/pf": {
+      "/subaccounts/pf": {
         "post": {
           "description": "Cria uma nova subconta do tipo Pessoa Física. Com esta subconta, você poderá gerenciar contas bancárias, clientes, planos, assinaturas e realizar split de pagamentos de forma independente.",
           "security": [
@@ -408,7 +408,7 @@
           }
         }
       },
-      "/subaccount/pj": {
+      "/subaccounts/pj": {
         "post": {
           "description": "Cria uma nova subconta do tipo Pessoa Jurídica. Com esta subconta, você poderá gerenciar contas bancárias, clientes, planos, assinaturas e realizar split de pagamentos de forma independente.",
           "security": [
