@@ -407,6 +407,87 @@
             }
           }
         }
+      },
+      "/subaccount/pj": {
+        "post": {
+          "description": "Cria uma nova subconta do tipo Pessoa Jurídica. Com esta subconta, você poderá gerenciar contas bancárias, clientes, planos, assinaturas e realizar split de pagamentos de forma independente.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "requestBody": {
+            "description": "Dados necessários para criação de uma subconta PJ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/createSubaccountPJ"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Subconta PJ criada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/subaccountPJResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro na criação da subconta",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/subaccountErrorResponse"
+                  },
+                  "examples": {
+                    "Subconta já cadastrada": {
+                      "value": {
+                        "data": {
+                          "message": "Esta conta já está cadastrada como subconta para sua companhia",
+                          "returnCode": -7300
+                        }
+                      }
+                    },
+                    "Erro não mapeado": {
+                      "value": {
+                        "data": {
+                          "message": "Erro ao criar subconta PJ",
+                          "returnCode": -7302
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Não autorizado",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/subaccountErrorResponse"
+                  },
+                  "examples": {
+                    "Não autenticado": {
+                      "value": {
+                        "data": {
+                          "message": "Unauthorized",
+                          "statusCode": 401
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "components": {
@@ -768,7 +849,7 @@
             "name": {
               "description": "Nome da subconta",
               "type": "string",
-              "example": "Subconta"
+              "example": "João Silva"
             },
             "juridicDataPartner": {
               "type": "object",
@@ -848,12 +929,6 @@
                   "state"
                 ],
                 "properties": {
-                  "entityType": {
-                    "description": "Tipo da entidade do endereço",
-                    "type": "string",
-                    "enum": ["COMPANY"],
-                    "example": "COMPANY"
-                  },
                   "addressType": {
                     "description": "Tipo do endereço",
                     "type": "string",
@@ -1023,6 +1098,11 @@
                   "items": {
                     "type": "object",
                     "properties": {
+                      "addressType": {
+                        "description": "Tipo do endereço",
+                        "type": "string",
+                        "example": "RESPONSIBLE"
+                      },
                       "zipcode": {
                         "description": "CEP do endereço",
                         "type": "integer",
@@ -1146,6 +1226,454 @@
                   "format": "int32"
                 }
               }
+            }
+          }
+        },
+        "createSubaccountPJ": {
+          "type": "object",
+          "required": [
+            "name",
+            "juridicDataPartner",
+            "juridicLegalData",
+            "addresses",
+            "accountBank"
+          ],
+          "properties": {
+            "name": {
+              "description": "Nome da subconta",
+              "type": "string",
+              "example": "Empresa Teste LTDA"
+            },
+            "juridicDataPartner": {
+              "type": "object",
+              "required": [
+                "name",
+                "lastName",
+                "cpf",
+                "email",
+                "birthdate",
+                "contactPhone",
+                "monthRevenue",
+                "jobOccupation",
+                "fullnameMom"
+              ],
+              "properties": {
+                "name": {
+                  "description": "Nome do responsável legal",
+                  "type": "string",
+                  "example": "João"
+                },
+                "lastName": {
+                  "description": "Sobrenome do responsável legal",
+                  "type": "string",
+                  "example": "Silva"
+                },
+                "cpf": {
+                  "description": "CPF do responsável legal",
+                  "type": "string",
+                  "example": "00000000000"
+                },
+                "email": {
+                  "description": "Email do responsável legal",
+                  "type": "string",
+                  "format": "email",
+                  "example": "email@email.com"
+                },
+                "birthdate": {
+                  "description": "Data de nascimento do responsável legal",
+                  "type": "string",
+                  "format": "date",
+                  "example": "1990-05-20"
+                },
+                "contactPhone": {
+                  "description": "Telefone de contato do responsável legal",
+                  "type": "string",
+                  "example": "(00) 00000-0000"
+                },
+                "monthRevenue": {
+                  "description": "Renda mensal do responsável legal",
+                  "type": "number",
+                  "example": 50000
+                },
+                "jobOccupation": {
+                  "description": "Ocupação profissional do responsável legal",
+                  "type": "string",
+                  "example": "Diretor Financeiro"
+                },
+                "fullnameMom": {
+                  "description": "Nome completo da mãe do responsável legal",
+                  "type": "string",
+                  "example": "Maria Silva"
+                }
+              }
+            },
+            "juridicLegalData": {
+              "type": "object",
+              "required": [
+                "cnpj",
+                "contactPhone",
+                "fantasyName",
+                "socialReason",
+                "avgAnualBilling",
+                "searchingServices",
+                "socialMedia"
+              ],
+              "properties": {
+                "cnpj": {
+                  "description": "CNPJ da empresa",
+                  "type": "string",
+                  "example": "00000000000000"
+                },
+                "contactPhone": {
+                  "description": "Telefone de contato da empresa",
+                  "type": "string",
+                  "example": "(00) 00000-0000"
+                },
+                "fantasyName": {
+                  "description": "Nome fantasia da empresa",
+                  "type": "string",
+                  "example": "Empresa Exemplo Ltda"
+                },
+                "socialReason": {
+                  "description": "Razão social da empresa",
+                  "type": "string",
+                  "example": "Empresa Exemplo LTDA"
+                },
+                "avgAnualBilling": {
+                  "description": "Faturamento anual médio da empresa",
+                  "type": "number",
+                  "example": 1000000
+                },
+                "searchingServices": {
+                  "description": "Serviços que a empresa busca",
+                  "type": "string",
+                  "example": "Consultoria Financeira"
+                },
+                "socialMedia": {
+                  "description": "Rede social da empresa",
+                  "type": "string",
+                  "example": "@empresaexemplo"
+                }
+              }
+            },
+            "addresses": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "addressType",
+                  "zipcode",
+                  "street",
+                  "streetNumber",
+                  "neighborhood",
+                  "city",
+                  "state"
+                ],
+                "properties": {
+                  "addressType": {
+                    "description": "Tipo do endereço",
+                    "type": "string",
+                    "enum": ["COMMERCIAL", "RESPONSIBLE"],
+                    "example": "COMMERCIAL"
+                  },
+                  "zipcode": {
+                    "description": "CEP do endereço",
+                    "type": "integer",
+                    "example": 12345678
+                  },
+                  "street": {
+                    "description": "Nome da rua",
+                    "type": "string",
+                    "example": "Rua A"
+                  },
+                  "streetNumber": {
+                    "description": "Número do endereço",
+                    "type": "integer",
+                    "example": 100
+                  },
+                  "complement": {
+                    "description": "Complemento do endereço",
+                    "type": "string",
+                    "example": "Sala 5"
+                  },
+                  "reference": {
+                    "description": "Ponto de referência do endereço",
+                    "type": "string",
+                    "example": "Próximo ao Shopping"
+                  },
+                  "neighborhood": {
+                    "description": "Bairro do endereço",
+                    "type": "string",
+                    "example": "Centro"
+                  },
+                  "city": {
+                    "description": "Cidade do endereço",
+                    "type": "string",
+                    "example": "São Paulo"
+                  },
+                  "state": {
+                    "description": "Estado do endereço",
+                    "type": "string",
+                    "example": "SP"
+                  }
+                }
+              }
+            },
+            "accountBank": {
+              "type": "object",
+              "required": [
+                "holderName",
+                "bankCode",
+                "accountType",
+                "accountNumber",
+                "routingNumber",
+                "document"
+              ],
+              "properties": {
+                "holderName": {
+                  "description": "Nome do titular da conta bancária",
+                  "type": "string",
+                  "example": "Empresa Teste LTDA"
+                },
+                "bankCode": {
+                  "description": "Código do banco",
+                  "type": "string",
+                  "example": "001"
+                },
+                "accountType": {
+                  "description": "Tipo da conta bancária",
+                  "type": "string",
+                  "enum": ["CHECKING", "SAVINGS"],
+                  "example": "CHECKING"
+                },
+                "accountNumber": {
+                  "description": "Número da conta com dígito verificador",
+                  "type": "string",
+                  "example": "12345678-00"
+                },
+                "routingNumber": {
+                  "description": "Número da agência com dígito verificador",
+                  "type": "string",
+                  "example": "0001-00"
+                },
+                "document": {
+                  "description": "CNPJ do titular da conta bancária",
+                  "type": "string",
+                  "example": "00000000000000"
+                }
+              }
+            }
+          }
+        },
+        "subaccountPJResponse": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "Identificador único da subconta",
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "6c426366-4395-4f3c-8b1e-b15dece967b6"
+                },
+                "name": {
+                  "description": "Nome da subconta",
+                  "type": "string",
+                  "example": "Super Pagamentos"
+                },
+                "juridicDataPartner": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "description": "Nome do responsável legal",
+                      "type": "string",
+                      "example": "João"
+                    },
+                    "lastName": {
+                      "description": "Sobrenome do responsável legal",
+                      "type": "string",
+                      "example": "Silva"
+                    },
+                    "cpf": {
+                      "description": "CPF do responsável legal",
+                      "type": "string",
+                      "example": "00000000000"
+                    },
+                    "email": {
+                      "description": "Email do responsável legal",
+                      "type": "string",
+                      "format": "email",
+                      "example": "email@email.com"
+                    },
+                    "birthdate": {
+                      "description": "Data de nascimento do responsável legal",
+                      "type": "string",
+                      "format": "date",
+                      "example": "1990-05-20"
+                    },
+                    "contactPhone": {
+                      "description": "Telefone de contato do responsável legal",
+                      "type": "string",
+                      "example": "(00) 00000-0000"
+                    },
+                    "monthRevenue": {
+                      "description": "Renda mensal do responsável legal",
+                      "type": "number",
+                      "example": 50000
+                    },
+                    "jobOccupation": {
+                      "description": "Ocupação profissional do responsável legal",
+                      "type": "string",
+                      "example": "Diretor Financeiro"
+                    },
+                    "fullnameMom": {
+                      "description": "Nome completo da mãe do responsável legal",
+                      "type": "string",
+                      "example": "Maria Silva"
+                    }
+                  }
+                },
+                "juridicLegalData": {
+                  "type": "object",
+                  "properties": {
+                    "cnpj": {
+                      "description": "CNPJ da empresa",
+                      "type": "string",
+                      "example": "00000000000000"
+                    },
+                    "contactPhone": {
+                      "description": "Telefone de contato da empresa",
+                      "type": "string",
+                      "example": "(00) 00000-0000"
+                    },
+                    "fantasyName": {
+                      "description": "Nome fantasia da empresa",
+                      "type": "string",
+                      "example": "Empresa Exemplo Ltda"
+                    },
+                    "socialReason": {
+                      "description": "Razão social da empresa",
+                      "type": "string",
+                      "example": "Empresa Exemplo LTDA"
+                    },
+                    "avgAnualBilling": {
+                      "description": "Faturamento anual médio da empresa",
+                      "type": "number",
+                      "example": 1000000.50
+                    },
+                    "searchingServices": {
+                      "description": "Serviços que a empresa busca",
+                      "type": "string",
+                      "example": "Consultoria Financeira"
+                    },
+                    "socialMedia": {
+                      "description": "Rede social da empresa",
+                      "type": "string",
+                      "example": "@empresaexemplo"
+                    }
+                  }
+                },
+                "addresses": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "addressType": {
+                        "description": "Tipo do endereço",
+                        "type": "string",
+                        "enum": ["COMMERCIAL", "RESPONSIBLE"],
+                        "example": "COMMERCIAL"
+                      },
+                      "zipcode": {
+                        "description": "CEP do endereço",
+                        "type": "integer",
+                        "example": 12345678
+                      },
+                      "street": {
+                        "description": "Nome da rua",
+                        "type": "string",
+                        "example": "Rua A"
+                      },
+                      "streetNumber": {
+                        "description": "Número do endereço",
+                        "type": "integer",
+                        "example": 100
+                      },
+                      "complement": {
+                        "description": "Complemento do endereço",
+                        "type": "string",
+                        "example": "Sala 5"
+                      },
+                      "reference": {
+                        "description": "Ponto de referência do endereço",
+                        "type": "string",
+                        "example": "Próximo ao Shopping"
+                      },
+                      "neighborhood": {
+                        "description": "Bairro do endereço",
+                        "type": "string",
+                        "example": "Centro"
+                      },
+                      "city": {
+                        "description": "Cidade do endereço",
+                        "type": "string",
+                        "example": "São Paulo"
+                      },
+                      "state": {
+                        "description": "Estado do endereço",
+                        "type": "string",
+                        "example": "SP"
+                      }
+                    }
+                  }
+                },
+                "accountBank": {
+                  "type": "object",
+                  "properties": {
+                    "holderName": {
+                      "description": "Nome do titular da conta bancária",
+                      "type": "string",
+                      "example": "Empresa Teste LTDA"
+                    },
+                    "bankCode": {
+                      "description": "Código do banco",
+                      "type": "string",
+                      "example": "001"
+                    },
+                    "accountType": {
+                      "description": "Tipo da conta bancária",
+                      "type": "string",
+                      "enum": ["CHECKING", "SAVINGS"],
+                      "example": "CHECKING"
+                    },
+                    "accountNumber": {
+                      "description": "Número da conta com dígito verificador",
+                      "type": "string",
+                      "example": "12345678-00"
+                    },
+                    "routingNumber": {
+                      "description": "Número da agência com dígito verificador",
+                      "type": "string",
+                      "example": "0001-00"
+                    },
+                    "document": {
+                      "description": "CNPJ do titular da conta bancária",
+                      "type": "string",
+                      "example": "60346632000133"
+                    }
+                  }
+                },
+                "status": {
+                  "description": "Status atual da subconta",
+                  "type": "string",
+                  "example": "PENDING"
+                }
+              }
+            },
+            "message": {
+              "type": "string",
+              "example": "Subconta PJ criada com sucesso"
             }
           }
         }
