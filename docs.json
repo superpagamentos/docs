@@ -53,7 +53,8 @@
               "api-reference/endpoint/subaccounts/createpf",
               "api-reference/endpoint/subaccounts/createpj",
               "api-reference/endpoint/subaccounts/listall",
-              "api-reference/endpoint/subaccounts/findone"
+              "api-reference/endpoint/subaccounts/findone",
+              "api-reference/endpoint/subaccounts/delete"
             ]
           },
           {

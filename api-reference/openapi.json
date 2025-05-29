@@ -627,7 +627,76 @@
               }
             }
           }
-        }
+        },
+        "delete": {
+            "description": "Remove uma subconta específica. Esta operação é irreversível e deve ser utilizada com cautela.",
+            "security": [
+              {
+                "bearerAuth": []
+              }
+            ],
+            "parameters": [
+              {
+                "name": "subaccountId",
+                "in": "path",
+                "description": "Identificador único da subconta",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Subconta deletada com sucesso",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "sellerUnicId": {
+                              "description": "Identificador único da subconta deletada",
+                              "type": "string",
+                              "format": "uuid",
+                              "example": "d4ec4843-40d0-48e6-91ce-ee5c1116380c"
+                            }
+                          }
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Subconta deletada com sucesso"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "400": {
+                "description": "Erro ao deletar subconta",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/subaccountErrorResponse"
+                    },
+                    "examples": {
+                      "Subconta não encontrada": {
+                        "value": {
+                          "data": {
+                            "message": "Subconta não encontrada",
+                            "returnCode": -2800
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
       }
     },
     "components": {
