@@ -103,10 +103,22 @@
 
       "/bank_accounts": {
         "post": {
-          "description": "Crie uma nova conta bancária para a empresa.\n\nA criação de uma conta bancária é **essencial para realizar saques** dos valores recebidos através da Super Pagamentos. \n\n**Importante:** A conta bancária deve obrigatoriamente pertencer ao mesmo titular/CNPJ da conta na Super Pagamentos. Contas bancárias de terceiros não são aceitas por questões de segurança e conformidade.\n\n**Tipos de conta aceitos:**\n- Conta Corrente\n- Conta Poupança\n\n**Documentação necessária:**\n- A conta bancária deve estar no mesmo nome/CNPJ cadastrado na Super Pagamentos\n- Todos os dados bancários devem estar corretos e atualizados",
+          "description": "Crie uma nova conta bancária para a empresa.\n\nA criação de uma conta bancária é **essencial para realizar saques** dos valores recebidos através da Super Pagamentos. \n\n**Importante:** A conta bancária deve obrigatoriamente pertencer ao mesmo titular/CNPJ da conta na Super Pagamentos. Contas bancárias de terceiros não são aceitas por questões de segurança e conformidade.\n\n**Tipos de conta aceitos:**\n- Conta Corrente\n- Conta Poupança\n\n**Documentação necessária:**\n- A conta bancária deve estar no mesmo nome/CNPJ cadastrado na Super Pagamentos\n- Todos os dados bancários devem estar corretos e atualizados\n\n**Operação em subconta:**\nPara criar uma conta bancária em uma subconta específica, inclua o header `x-subaccount-id` com o ID da subconta. Quando este header é fornecido, a operação será realizada no contexto da subconta especificada, em vez da conta principal autenticada.",
           "security": [
             {
               "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "x-subaccount-id",
+              "in": "header",
+              "description": "ID da subconta onde a operação será realizada. Quando fornecido, a operação será executada no contexto desta subconta específica.",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
             }
           ],
           "requestBody": {
@@ -178,13 +190,23 @@
           }
         },
         "get": {
-          "description": "Lista todas as contas bancárias cadastradas para a empresa. A resposta inclui informações detalhadas de cada conta, como dados do titular, dados bancários e status da conta. Os resultados são paginados para melhor performance.",
+          "description": "Lista todas as contas bancárias cadastradas para a empresa. A resposta inclui informações detalhadas de cada conta, como dados do titular, dados bancários e status da conta. Os resultados são paginados para melhor performance.\n\n**Operação em subconta:**\nPara listar as contas bancárias de uma subconta específica, inclua o header `x-subaccount-id` com o ID da subconta. Quando este header é fornecido, a operação será realizada no contexto da subconta especificada, em vez da conta principal autenticada.",
           "security": [
             {
               "bearerAuth": []
             }
           ],
           "parameters": [
+            {
+              "name": "x-subaccount-id",
+              "in": "header",
+              "description": "ID da subconta onde a operação será realizada. Quando fornecido, a operação será executada no contexto desta subconta específica.",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
             {
               "name": "page",
               "in": "query",
@@ -225,13 +247,23 @@
       },
       "/bank_accounts/{bankAccountId}": {
         "get": {
-          "description": "Busca os dados de uma conta bancária específica que pertence à empresa cadastrada. A resposta inclui informações detalhadas da conta, como dados do titular, dados bancários e status da conta.",
+          "description": "Busca os dados de uma conta bancária específica que pertence à empresa cadastrada. A resposta inclui informações detalhadas da conta, como dados do titular, dados bancários e status da conta.\n\n**Operação em subconta:**\nPara buscar uma conta bancária específica de uma subconta, inclua o header `x-subaccount-id` com o ID da subconta. Quando este header é fornecido, a operação será realizada no contexto da subconta especificada, em vez da conta principal autenticada.",
           "security": [
             {
               "bearerAuth": []
             }
           ],
           "parameters": [
+            {
+              "name": "x-subaccount-id",
+              "in": "header",
+              "description": "ID da subconta onde a operação será realizada. Quando fornecido, a operação será executada no contexto desta subconta específica.",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
             {
               "name": "bankAccountId",
               "in": "path",
@@ -276,13 +308,23 @@
           }
         },
         "delete": {
-          "description": "Remove uma conta bancária específica que pertence à empresa cadastrada. Esta operação é irreversível e deve ser utilizada com cautela.",
+          "description": "Remove uma conta bancária específica que pertence à empresa cadastrada. Esta operação é irreversível e deve ser utilizada com cautela.\n\n**Operação em subconta:**\nPara deletar uma conta bancária específica de uma subconta, inclua o header `x-subaccount-id` com o ID da subconta. Quando este header é fornecido, a operação será realizada no contexto da subconta especificada, em vez da conta principal autenticada.",
           "security": [
             {
               "bearerAuth": []
             }
           ],
           "parameters": [
+            {
+              "name": "x-subaccount-id",
+              "in": "header",
+              "description": "ID da subconta onde a operação será realizada. Quando fornecido, a operação será executada no contexto desta subconta específica.",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
             {
               "name": "bankAccountId",
               "in": "path",
