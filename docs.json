@@ -14,20 +14,9 @@
         "tab": "Guia de implementação",
         "groups": [
           {
-            "group": "Bem-vindo",
+            "group": "Introdução e Aspectos Gerais",
             "pages": [
               "introduction"
-            ]
-          },
-          {
-            "group": "Essentials",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/settings",
-              "essentials/navigation",
-              "essentials/reusable-snippets"
             ]
           }
         ]
@@ -110,7 +99,31 @@
           }
         ]
       }
-    ]
+    ],
+    "global": {
+      "anchors": [
+        {
+          "anchor": "WhatsApp de Suporte",
+          "href": "https://wa.me/+5527999971368",
+          "icon": "whatsapp"
+        },
+        {
+          "anchor": "Comunidade do Discord",
+          "href": "https://discord.gg/superpagamentos",
+          "icon": "discord"
+        },
+        {
+          "anchor": "Canal do Youtube",
+          "href": "https://www.youtube.com/@superpagamentos",
+          "icon": "youtube"
+        },
+        {
+          "anchor": "Nosso Instagram",
+          "href": "https://www.instagram.com/superpagamentos",
+          "icon": "instagram"
+        }
+      ]
+    }
   },
   "logo": {
     "light": "/logo/dark.svg",
