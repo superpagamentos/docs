@@ -739,6 +739,286 @@
               }
             }
           }
+      },
+      "/customers": {
+        "post": {
+          "description": "Cria um novo cliente no sistema. Nenhum campo é obrigatório, exceto os campos do endereço quando informado.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "firstName": {
+                      "type": "string",
+                      "description": "Nome do cliente",
+                      "example": "João"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "description": "Sobrenome do cliente",
+                      "example": "Silva"
+                    },
+                    "email": {
+                      "type": "string",
+                      "description": "Email do cliente",
+                      "example": "email@email.com"
+                    },
+                    "phoneNumber": {
+                      "type": "string",
+                      "description": "Número de telefone do cliente",
+                      "example": "00000000000"
+                    },
+                    "document": {
+                      "type": "string",
+                      "description": "CPF ou CNPJ do cliente",
+                      "example": "00000000000"
+                    },
+                    "birthdate": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "Data de nascimento do cliente no formato yyyy-mm-dd",
+                      "example": "1994-10-04"
+                    },
+                    "address": {
+                      "type": "object",
+                      "description": "Endereço do cliente",
+                      "properties": {
+                        "zipcode": {
+                          "type": "integer",
+                          "description": "CEP do endereço",
+                          "example": 87654321
+                        },
+                        "street": {
+                          "type": "string",
+                          "description": "Nome da rua",
+                          "example": "Rua B"
+                        },
+                        "streetNumber": {
+                          "type": "integer",
+                          "description": "Número do endereço",
+                          "example": 200
+                        },
+                        "complement": {
+                          "type": "string",
+                          "description": "Complemento do endereço (opcional)",
+                          "example": "Casa 10"
+                        },
+                        "reference": {
+                          "type": "string",
+                          "description": "Ponto de referência do endereço (opcional)",
+                          "example": "Ao lado da padaria"
+                        },
+                        "neighborhood": {
+                          "type": "string",
+                          "description": "Bairro do endereço",
+                          "example": "Jardins"
+                        },
+                        "city": {
+                          "type": "string",
+                          "description": "Cidade do endereço",
+                          "example": "São Paulo"
+                        },
+                        "state": {
+                          "type": "string",
+                          "description": "Estado do endereço",
+                          "example": "SP"
+                        }
+                      },
+                      "required": [
+                        "zipcode",
+                        "street",
+                        "streetNumber",
+                        "neighborhood",
+                        "city",
+                        "state"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Cliente criado com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "8a2edf48-704b-4c23-8278-a902e88a5f93"
+                          },
+                          "firstName": {
+                            "type": "string",
+                            "example": "João"
+                          },
+                          "lastName": {
+                            "type": "string",
+                            "example": "Silva"
+                          },
+                          "email": {
+                            "type": "string",
+                            "example": "email@email.com"
+                          },
+                          "phoneNumber": {
+                            "type": "string",
+                            "example": "00000000000"
+                          },
+                          "document": {
+                            "type": "string",
+                            "example": "00000000000"
+                          },
+                          "birthdate": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "1994-10-04"
+                          },
+                          "address": {
+                            "type": "object",
+                            "properties": {
+                              "statusId": {
+                                "type": "string",
+                                "example": "APPROVED"
+                              },
+                              "zipcode": {
+                                "type": "integer",
+                                "example": 87654321
+                              },
+                              "street": {
+                                "type": "string",
+                                "example": "Rua B"
+                              },
+                              "streetNumber": {
+                                "type": "integer",
+                                "example": 200
+                              },
+                              "complement": {
+                                "type": "string",
+                                "example": "Casa 10"
+                              },
+                              "reference": {
+                                "type": "string",
+                                "example": "Ao lado da padaria"
+                              },
+                              "neighborhood": {
+                                "type": "string",
+                                "example": "Jardins"
+                              },
+                              "city": {
+                                "type": "string",
+                                "example": "São Paulo"
+                              },
+                              "state": {
+                                "type": "string",
+                                "example": "SP"
+                              }
+                            }
+                          },
+                          "statusId": {
+                            "type": "string",
+                            "example": "APPROVED"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2025-06-01T16:14:10.535Z"
+                          }
+                        }
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Cliente criado com sucesso"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro na requisição",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "data": {
+                            "type": "object",
+                            "properties": {
+                              "message": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                },
+                                "example": [
+                                  "O campo email \"email\" informado é inválido",
+                                  "O documento informado é inválido",
+                                  "O campo data de nascimento \"birthdate\" deve estar no formato yyyy-mm-dd",
+                                  "address.O campo rua \"street\" é obrigatório",
+                                  "address.O campo rua \"street\" deve ser um texto válido",
+                                  "address.O campo número \"streetNumber\" é obrigatório",
+                                  "address.O campo número \"streetNumber\" deve ser um número válido",
+                                  "address.O campo bairro \"neighborhood\" é obrigatório",
+                                  "address.O campo bairro \"neighborhood\" deve ser um texto válido",
+                                  "address.O campo cidade \"city\" é obrigatório",
+                                  "address.O campo cidade \"city\" deve ser um texto válido",
+                                  "address.O campo estado \"state\" é obrigatório",
+                                  "address.O campo estado \"state\" deve ser um texto válido",
+                                  "address.O campo CEP \"zipcode\" é obrigatório",
+                                  "address.O campo CEP \"zipcode\" deve ser um número válido"
+                                ]
+                              },
+                              "error": {
+                                "type": "string",
+                                "example": "Bad Request"
+                              },
+                              "statusCode": {
+                                "type": "integer",
+                                "example": 400
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "data": {
+                            "type": "object",
+                            "properties": {
+                              "message": {
+                                "type": "string",
+                                "example": "Erro ao criar cliente"
+                              },
+                              "returnCode": {
+                                "type": "integer",
+                                "example": -7403
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "components": {
