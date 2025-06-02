@@ -58,7 +58,8 @@
           {
             "group": "Clientes",
             "pages": [
-              "api-reference/endpoint/customers/create"
+              "api-reference/endpoint/customers/create",
+              "api-reference/endpoint/customers/list"
             ]
           },
           {

@@ -742,10 +742,22 @@
       },
       "/customers": {
         "post": {
-          "description": "Cria um novo cliente no sistema. Nenhum campo é obrigatório, exceto os campos do endereço quando informado.",
+          "description": "Cria um novo cliente no sistema. Nenhum campo é obrigatório, exceto os campos do endereço quando informado.\n\n**Operação em subconta:**\nPara criar um cliente em uma subconta específica, inclua o header `x-subaccount-id` com o ID da subconta. Quando este header é fornecido, a operação será realizada no contexto da subconta especificada, em vez da conta principal autenticada.",
           "security": [
             {
               "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "x-subaccount-id",
+              "in": "header",
+              "description": "ID da subconta onde a operação será realizada. Quando fornecido, a operação será executada no contexto desta subconta específica.",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
             }
           ],
           "requestBody": {
@@ -1013,6 +1025,201 @@
                         }
                       }
                     ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "get": {
+          "description": "Lista todos os clientes cadastrados. A resposta inclui informações detalhadas de cada cliente, como dados pessoais, contato e endereço. Os resultados são paginados para melhor performance.\n\n**Operação em subconta:**\nPara listar os clientes de uma subconta específica, inclua o header `x-subaccount-id` com o ID da subconta. Quando este header é fornecido, a operação será realizada no contexto da subconta especificada, em vez da conta principal autenticada.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "x-subaccount-id",
+              "in": "header",
+              "description": "ID da subconta onde a operação será realizada. Quando fornecido, a operação será executada no contexto desta subconta específica.",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            {
+              "name": "page",
+              "in": "query",
+              "description": "Número da página que deseja visualizar",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "default": 1,
+                "minimum": 1
+              }
+            },
+            {
+              "name": "limit",
+              "in": "query",
+              "description": "Quantidade de itens por página",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "default": 10,
+                "minimum": 1,
+                "maximum": 100
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Listagem de clientes",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "format": "uuid",
+                              "example": "8a2edf48-704b-4c23-8278-a902e88a5f93"
+                            },
+                            "firstName": {
+                              "type": "string",
+                              "example": "João"
+                            },
+                            "lastName": {
+                              "type": "string",
+                              "example": "Silva"
+                            },
+                            "email": {
+                              "type": "string",
+                              "example": "email@email.com"
+                            },
+                            "phoneNumber": {
+                              "type": "string",
+                              "example": "00000000000"
+                            },
+                            "document": {
+                              "type": "string",
+                              "example": "00000000000"
+                            },
+                            "birthdate": {
+                              "type": "string",
+                              "format": "date",
+                              "example": "1994-10-04"
+                            },
+                            "address": {
+                              "type": "object",
+                              "properties": {
+                                "statusId": {
+                                  "type": "string",
+                                  "example": "APPROVED"
+                                },
+                                "zipcode": {
+                                  "type": "integer",
+                                  "example": 87654321
+                                },
+                                "street": {
+                                  "type": "string",
+                                  "example": "Rua B"
+                                },
+                                "streetNumber": {
+                                  "type": "integer",
+                                  "example": 200
+                                },
+                                "complement": {
+                                  "type": "string",
+                                  "example": "Casa 10"
+                                },
+                                "reference": {
+                                  "type": "string",
+                                  "example": "Ao lado da padaria"
+                                },
+                                "neighborhood": {
+                                  "type": "string",
+                                  "example": "Jardins"
+                                },
+                                "city": {
+                                  "type": "string",
+                                  "example": "São Paulo"
+                                },
+                                "state": {
+                                  "type": "string",
+                                  "example": "SP"
+                                }
+                              }
+                            },
+                            "statusId": {
+                              "type": "string",
+                              "example": "APPROVED"
+                            },
+                            "createdAt": {
+                              "type": "string",
+                              "format": "date-time",
+                              "example": "2025-06-01T16:14:10.535Z"
+                            }
+                          }
+                        }
+                      },
+                      "meta": {
+                        "type": "object",
+                        "properties": {
+                          "total": {
+                            "type": "integer",
+                            "example": 11
+                          },
+                          "page": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "limit": {
+                            "type": "integer",
+                            "example": 10
+                          },
+                          "totalPages": {
+                            "type": "integer",
+                            "example": 2
+                          }
+                        }
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Listagem de clientes"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro na requisição",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "example": "Erro ao listar clientes"
+                          },
+                          "returnCode": {
+                            "type": "integer",
+                            "example": -7404
+                          }
+                        }
+                      }
+                    }
                   }
                 }
               }
