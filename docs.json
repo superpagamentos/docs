@@ -69,7 +69,8 @@
             "group": "Tokenização de Cartões",
             "pages": [
               "api-reference/endpoint/cards/tokenize",
-              "api-reference/endpoint/cards/get"
+              "api-reference/endpoint/cards/get",
+              "api-reference/endpoint/cards/delete"
             ]
           },
           {
