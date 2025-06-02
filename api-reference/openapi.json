@@ -1666,6 +1666,104 @@
               }
             }
           }
+        },
+        "delete": {
+          "description": "Remove um cliente específico do sistema. Esta operação é irreversível e deve ser utilizada com cautela.\n\n**Operação em subconta:**\nPara remover um cliente específico de uma subconta, inclua o header `x-subaccount-id` com o ID da subconta. Quando este header é fornecido, a operação será realizada no contexto da subconta especificada, em vez da conta principal autenticada.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "x-subaccount-id",
+              "in": "header",
+              "description": "ID da subconta onde a operação será realizada. Quando fornecido, a operação será executada no contexto desta subconta específica.",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            {
+              "name": "customerId",
+              "in": "path",
+              "description": "Identificador único do cliente",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Cliente removido com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "example": "Cliente removido com sucesso"
+                          }
+                        }
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Cliente removido com sucesso"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro ao remover cliente",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          },
+                          "returnCode": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "examples": {
+                    "Cliente não encontrado": {
+                      "value": {
+                        "data": {
+                          "message": "Cliente não encontrado",
+                          "returnCode": -7400
+                        }
+                      }
+                    },
+                    "Erro ao deletar": {
+                      "value": {
+                        "data": {
+                          "message": "Erro ao deletar cliente",
+                          "returnCode": -7405
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },

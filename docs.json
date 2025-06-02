@@ -61,7 +61,8 @@
               "api-reference/endpoint/customers/create",
               "api-reference/endpoint/customers/list",
               "api-reference/endpoint/customers/get",
-              "api-reference/endpoint/customers/update"
+              "api-reference/endpoint/customers/update",
+              "api-reference/endpoint/customers/delete"
             ]
           },
           {
