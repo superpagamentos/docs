@@ -1403,6 +1403,269 @@
               }
             }
           }
+        },
+        "put": {
+          "description": "Atualiza os dados de um cliente específico. Nenhum campo é obrigatório, exceto quando o cliente não possui um endereço cadastrado e deseja cadastrar um novo endereço - neste caso, todos os campos do endereço são obrigatórios.\n\n**Operação em subconta:**\nPara atualizar um cliente específico de uma subconta, inclua o header `x-subaccount-id` com o ID da subconta. Quando este header é fornecido, a operação será realizada no contexto da subconta especificada, em vez da conta principal autenticada.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "x-subaccount-id",
+              "in": "header",
+              "description": "ID da subconta onde a operação será realizada. Quando fornecido, a operação será executada no contexto desta subconta específica.",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            {
+              "name": "customerId",
+              "in": "path",
+              "description": "Identificador único do cliente",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "firstName": {
+                      "type": "string",
+                      "description": "Nome do cliente",
+                      "example": "Pedro"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "description": "Sobrenome do cliente",
+                      "example": "Alecrim"
+                    },
+                    "email": {
+                      "type": "string",
+                      "description": "Email do cliente",
+                      "example": "email@email.com"
+                    },
+                    "phoneNumber": {
+                      "type": "string",
+                      "description": "Número de telefone do cliente",
+                      "example": "00000000000"
+                    },
+                    "document": {
+                      "type": "string",
+                      "description": "CPF ou CNPJ do cliente",
+                      "example": "00000000000"
+                    },
+                    "birthdate": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "Data de nascimento do cliente no formato yyyy-mm-dd",
+                      "example": "1994-10-04"
+                    },
+                    "address": {
+                      "type": "object",
+                      "description": "Endereço do cliente. Se o cliente não possuir um endereço cadastrado, todos os campos são obrigatórios para cadastrar um novo endereço.",
+                      "properties": {
+                        "zipcode": {
+                          "type": "integer",
+                          "description": "CEP do endereço",
+                          "example": 87654321
+                        },
+                        "street": {
+                          "type": "string",
+                          "description": "Nome da rua",
+                          "example": "Rua B"
+                        },
+                        "streetNumber": {
+                          "type": "integer",
+                          "description": "Número do endereço",
+                          "example": 200
+                        },
+                        "complement": {
+                          "type": "string",
+                          "description": "Complemento do endereço (opcional)",
+                          "example": "Casa 10"
+                        },
+                        "reference": {
+                          "type": "string",
+                          "description": "Ponto de referência do endereço (opcional)",
+                          "example": "Ao lado da padaria"
+                        },
+                        "neighborhood": {
+                          "type": "string",
+                          "description": "Bairro do endereço",
+                          "example": "Jardins"
+                        },
+                        "city": {
+                          "type": "string",
+                          "description": "Cidade do endereço",
+                          "example": "São Paulo"
+                        },
+                        "state": {
+                          "type": "string",
+                          "description": "Estado do endereço",
+                          "example": "SP"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Cliente atualizado com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "cccfaed0-f346-4543-81ee-57b41db2aafa"
+                          },
+                          "firstName": {
+                            "type": "string",
+                            "example": "Pedro"
+                          },
+                          "lastName": {
+                            "type": "string",
+                            "example": "Alecrim"
+                          },
+                          "email": {
+                            "type": "string",
+                            "example": "email@email.com"
+                          },
+                          "phoneNumber": {
+                            "type": "string",
+                            "example": "00000000000"
+                          },
+                          "document": {
+                            "type": "string",
+                            "example": "00000000000"
+                          },
+                          "birthdate": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "1994-10-04"
+                          },
+                          "address": {
+                            "type": "object",
+                            "properties": {
+                              "statusId": {
+                                "type": "string",
+                                "example": "APPROVED"
+                              },
+                              "zipcode": {
+                                "type": "integer",
+                                "example": 87654321
+                              },
+                              "street": {
+                                "type": "string",
+                                "example": "Rua B"
+                              },
+                              "streetNumber": {
+                                "type": "integer",
+                                "example": 200
+                              },
+                              "complement": {
+                                "type": "string",
+                                "example": "Casa 10"
+                              },
+                              "reference": {
+                                "type": "string",
+                                "example": "Ao lado da padaria"
+                              },
+                              "neighborhood": {
+                                "type": "string",
+                                "example": "Jardins"
+                              },
+                              "city": {
+                                "type": "string",
+                                "example": "São Paulo"
+                              },
+                              "state": {
+                                "type": "string",
+                                "example": "SP"
+                              }
+                            }
+                          },
+                          "statusId": {
+                            "type": "string",
+                            "example": "APPROVED"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2025-05-31T22:41:16.755Z"
+                          }
+                        }
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Cliente atualizado com sucesso"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro na atualização do cliente",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          },
+                          "returnCode": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "examples": {
+                    "Cliente sem endereço": {
+                      "value": {
+                        "data": {
+                          "message": "O cliente não possui um endereço cadastrado, para cadastrar é necessário informar todos os campos do endereço.",
+                          "returnCode": -7406
+                        }
+                      }
+                    },
+                    "Erro não mapeado": {
+                      "value": {
+                        "data": {
+                          "message": "Erro ao atualizar cliente",
+                          "returnCode": -7404
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },
