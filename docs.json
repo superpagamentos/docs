@@ -68,7 +68,7 @@
           {
             "group": "Tokenização de Cartões",
             "pages": [
-              "api-reference/endpoint/card_tokens/create"
+              "api-reference/endpoint/cards/tokenize"
             ]
           },
           {

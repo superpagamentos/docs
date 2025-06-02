@@ -766,6 +766,7 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "required": ["firstName", "lastName", "email", "document"],
                   "properties": {
                     "firstName": {
                       "type": "string",
@@ -1756,6 +1757,210 @@
                         "data": {
                           "message": "Erro ao deletar cliente",
                           "returnCode": -7405
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/cards/tokenize": {
+        "post": {
+          "description": "Tokeniza um cartão de crédito e o associa a um cliente específico. A tokenização é um processo de segurança que substitui os dados sensíveis do cartão por um token único e seguro. Este token pode ser utilizado para realizar compras futuras sem a necessidade de informar novamente os dados do cartão.\n\n**Importante:**\n- Os dados do cartão são criptografados e armazenados de forma segura\n- O token gerado é único e específico para cada cartão\n- O token pode ser utilizado apenas para o cliente ao qual foi associado\n- A tokenização reduz riscos de segurança ao não expor os dados reais do cartão\n\n**Operação em subconta:**\nPara tokenizar um cartão em uma subconta específica, inclua o header `x-subaccount-id` com o ID da subconta. Quando este header é fornecido, a operação será realizada no contexto da subconta especificada, em vez da conta principal autenticada.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "x-subaccount-id",
+              "in": "header",
+              "description": "ID da subconta onde a operação será realizada. Quando fornecido, a operação será executada no contexto desta subconta específica.",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "customerId",
+                    "holderName",
+                    "cardNumber",
+                    "expirationMonth",
+                    "expirationYear",
+                    "securityCode"
+                  ],
+                  "properties": {
+                    "customerId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Identificador único do cliente ao qual o cartão será associado",
+                      "example": "8b7c2dd1-e1bf-479f-a5ec-8871ef355b50"
+                    },
+                    "holderName": {
+                      "type": "string",
+                      "description": "Nome do titular do cartão, exatamente como aparece no cartão",
+                      "example": "João Silva"
+                    },
+                    "cardNumber": {
+                      "type": "string",
+                      "description": "Número do cartão de crédito, sem espaços ou caracteres especiais. Precisa ter entre 13 e 16 dígitos.",
+                      "example": "0000000000000000"
+                    },
+                    "expirationMonth": {
+                      "type": "string",
+                      "description": "Mês de expiração do cartão no formato MM. Precisa ser um número entre 01 e 12.",
+                      "example": "10"
+                    },
+                    "expirationYear": {
+                      "type": "string",
+                      "description": "Ano de expiração do cartão no formato YYYY. Precisa ser um número de 4 dígitos.",
+                      "example": "2031"
+                    },
+                    "securityCode": {
+                      "type": "string",
+                      "description": "Código de segurança do cartão (CVV). Precisa ter entre 3 e 4 dígitos.",
+                      "example": "123"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Cartão tokenizado com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Identificador único do token do cartão",
+                            "example": "023924d3-9e6d-4231-832e-4237c1b0cd53"
+                          },
+                          "customerId": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Identificador único do cliente ao qual o cartão foi associado",
+                            "example": "8b7c2dd1-e1bf-479f-a5ec-8871ef355b50"
+                          },
+                          "holderName": {
+                            "type": "string",
+                            "description": "Nome do titular do cartão",
+                            "example": "João Silva"
+                          },
+                          "first4Digits": {
+                            "type": "string",
+                            "description": "Primeiros 4 dígitos do cartão",
+                            "example": "0000"
+                          },
+                          "last4Digits": {
+                            "type": "string",
+                            "description": "Últimos 4 dígitos do cartão",
+                            "example": "0000"
+                          },
+                          "expirationMonth": {
+                            "type": "string",
+                            "description": "Mês de expiração do cartão",
+                            "example": "10"
+                          },
+                          "expirationYear": {
+                            "type": "string",
+                            "description": "Ano de expiração do cartão",
+                            "example": "2031"
+                          },
+                          "cardBrand": {
+                            "type": "string",
+                            "description": "Bandeira do cartão",
+                            "example": "MasterCard"
+                          },
+                          "isActive": {
+                            "type": "boolean",
+                            "description": "Indica se o cartão está ativo",
+                            "example": true
+                          },
+                          "isVerified": {
+                            "type": "boolean",
+                            "description": "Indica se o cartão foi verificado",
+                            "example": false
+                          },
+                          "postalCodeCheck": {
+                            "type": "boolean",
+                            "description": "Indica se o CEP do cartão foi verificado",
+                            "example": false
+                          },
+                          "securityCodeCheck": {
+                            "type": "boolean",
+                            "description": "Indica se o código de segurança do cartão foi verificado",
+                            "example": false
+                          },
+                          "addressCheck": {
+                            "type": "boolean",
+                            "description": "Indica se o endereço do cartão foi verificado",
+                            "example": false
+                          }
+                        }
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Cartão tokenizado com sucesso"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro ao tokenizar cartão",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          },
+                          "returnCode": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "examples": {
+                    "Cartão inválido": {
+                      "value": {
+                        "data": {
+                          "message": "O cartão informado é inválido",
+                          "returnCode": -7209
+                        }
+                      }
+                    },
+                    "Erro genérico": {
+                      "value": {
+                        "data": {
+                          "message": "Erro ao tokenizar cartão",
+                          "returnCode": -7208
                         }
                       }
                     }
