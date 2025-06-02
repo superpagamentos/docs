@@ -1970,6 +1970,167 @@
             }
           }
         }
+      },
+      "/cards/{tokenizedCardId}": {
+        "get": {
+          "description": "Busca os dados de um cartão tokenizado específico. Esta rota retorna informações parciais do cartão (apenas os primeiros e últimos 4 dígitos) por questões de segurança, mantendo os dados sensíveis protegidos.\n\n**Importante:**\n- Apenas os primeiros e últimos 4 dígitos do cartão são retornados\n- Os dados completos do cartão nunca são expostos na API\n- O cartão só pode ser consultado se pertencer ao cliente associado\n- A consulta é registrada para fins de auditoria\n\n**Operação em subconta:**\nPara buscar um cartão tokenizado de uma subconta específica, inclua o header `x-subaccount-id` com o ID da subconta. Quando este header é fornecido, a operação será realizada no contexto da subconta especificada, em vez da conta principal autenticada.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "x-subaccount-id",
+              "in": "header",
+              "description": "ID da subconta onde a operação será realizada. Quando fornecido, a operação será executada no contexto desta subconta específica.",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            {
+              "name": "tokenizedCardId",
+              "in": "path",
+              "description": "Identificador único do token do cartão",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Cartão encontrado com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Identificador único do token do cartão",
+                            "example": "6941e55c-4e66-47c9-b698-c116f4005258"
+                          },
+                          "customerId": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Identificador único do cliente ao qual o cartão está associado",
+                            "example": "9e6ce99e-0ad5-4e38-b5af-ae44160e8fda"
+                          },
+                          "holderName": {
+                            "type": "string",
+                            "description": "Nome do titular do cartão",
+                            "example": "João Silva"
+                          },
+                          "first4Digits": {
+                            "type": "string",
+                            "description": "Primeiros 4 dígitos do cartão",
+                            "example": "0000"
+                          },
+                          "last4Digits": {
+                            "type": "string",
+                            "description": "Últimos 4 dígitos do cartão",
+                            "example": "0000"
+                          },
+                          "expirationMonth": {
+                            "type": "string",
+                            "description": "Mês de expiração do cartão",
+                            "example": "10"
+                          },
+                          "expirationYear": {
+                            "type": "string",
+                            "description": "Ano de expiração do cartão",
+                            "example": "2031"
+                          },
+                          "cardBrand": {
+                            "type": "string",
+                            "description": "Bandeira do cartão",
+                            "example": "MasterCard"
+                          },
+                          "isActive": {
+                            "type": "boolean",
+                            "description": "Indica se o cartão está ativo",
+                            "example": true
+                          },
+                          "isVerified": {
+                            "type": "boolean",
+                            "description": "Indica se o cartão foi verificado",
+                            "example": false
+                          },
+                          "postalCodeCheck": {
+                            "type": "boolean",
+                            "description": "Indica se o CEP do cartão foi verificado",
+                            "example": false
+                          },
+                          "securityCodeCheck": {
+                            "type": "boolean",
+                            "description": "Indica se o código de segurança do cartão foi verificado",
+                            "example": false
+                          },
+                          "addressCheck": {
+                            "type": "boolean",
+                            "description": "Indica se o endereço do cartão foi verificado",
+                            "example": false
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Data e hora em que o cartão foi tokenizado",
+                            "example": "2025-06-02T17:51:28.958Z"
+                          }
+                        }
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Cartão encontrado com sucesso"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro ao buscar cartão",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          },
+                          "returnCode": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "examples": {
+                    "Cartão não encontrado": {
+                      "value": {
+                        "data": {
+                          "message": "Cartão não encontrado",
+                          "returnCode": -7508
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "components": {
