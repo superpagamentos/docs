@@ -1226,6 +1226,184 @@
             }
           }
         }
+      },
+      "/customers/{customerId}": {
+        "get": {
+          "description": "Busca os dados de um cliente específico. A resposta inclui informações detalhadas do cliente, como dados pessoais, contato e endereço.\n\n**Operação em subconta:**\nPara buscar um cliente específico de uma subconta, inclua o header `x-subaccount-id` com o ID da subconta. Quando este header é fornecido, a operação será realizada no contexto da subconta especificada, em vez da conta principal autenticada.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "x-subaccount-id",
+              "in": "header",
+              "description": "ID da subconta onde a operação será realizada. Quando fornecido, a operação será executada no contexto desta subconta específica.",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            {
+              "name": "customerId",
+              "in": "path",
+              "description": "Identificador único do cliente",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Cliente encontrado com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "672a2c0f-7172-4d8d-ba8f-f35805ab7d57"
+                          },
+                          "firstName": {
+                            "type": "string",
+                            "nullable": true,
+                            "example": "João"
+                          },
+                          "lastName": {
+                            "type": "string",
+                            "nullable": true,
+                            "example": "Silva"
+                          },
+                          "email": {
+                            "type": "string",
+                            "nullable": true,
+                            "example": "email@email.com"
+                          },
+                          "phoneNumber": {
+                            "type": "string",
+                            "nullable": true,
+                            "example": "00000000000"
+                          },
+                          "document": {
+                            "type": "string",
+                            "nullable": true,
+                            "example": "00000000000"
+                          },
+                          "birthdate": {
+                            "type": "string",
+                            "format": "date",
+                            "nullable": true,
+                            "example": "1994-10-04"
+                          },
+                          "address": {
+                            "type": "object",
+                            "nullable": true,
+                            "properties": {
+                              "statusId": {
+                                "type": "string",
+                                "example": "APPROVED"
+                              },
+                              "zipcode": {
+                                "type": "integer",
+                                "example": 87654321
+                              },
+                              "street": {
+                                "type": "string",
+                                "example": "Rua B"
+                              },
+                              "streetNumber": {
+                                "type": "integer",
+                                "example": 200
+                              },
+                              "complement": {
+                                "type": "string",
+                                "example": "Casa 10"
+                              },
+                              "reference": {
+                                "type": "string",
+                                "example": "Ao lado da padaria"
+                              },
+                              "neighborhood": {
+                                "type": "string",
+                                "example": "Jardins"
+                              },
+                              "city": {
+                                "type": "string",
+                                "example": "São Paulo"
+                              },
+                              "state": {
+                                "type": "string",
+                                "example": "SP"
+                              }
+                            },
+                            "example": {
+                              "statusId": "APPROVED",
+                              "zipcode": 87654321,
+                              "street": "Rua B",
+                              "streetNumber": 200,
+                              "complement": "Casa 10",
+                              "reference": "Ao lado da padaria",
+                              "neighborhood": "Jardins",
+                              "city": "São Paulo",
+                              "state": "SP"
+                            }
+                          },
+                          "statusId": {
+                            "type": "string",
+                            "example": "APPROVED"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2025-06-01T03:15:56.085Z"
+                          }
+                        }
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Cliente encontrado com sucesso"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro ao buscar cliente",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "example": "Cliente não encontrado"
+                          },
+                          "returnCode": {
+                            "type": "integer",
+                            "example": -7400
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "components": {
