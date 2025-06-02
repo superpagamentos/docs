@@ -1852,7 +1852,7 @@
                           "id": {
                             "type": "string",
                             "format": "uuid",
-                            "description": "Identificador único do token do cartão",
+                            "description": "Identificador único do token do cartão. Será utilizado para realizar transações futuras.",
                             "example": "023924d3-9e6d-4231-832e-4237c1b0cd53"
                           },
                           "customerId": {
