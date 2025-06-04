@@ -2145,6 +2145,393 @@
             }
           }
         }
+      },
+      "/subscriptions": {
+        "post": {
+          "description": "Cria uma nova assinatura recorrente para um cliente. As assinaturas recorrentes permitem cobrar automaticamente um valor fixo em intervalos regulares, facilitando a gestão de pagamentos recorrentes.\n\n**Fluxo de funcionamento:**\n1. A assinatura é criada com os dados do cliente, cartão, valores e frequência\n2. No dia especificado em `dueDate`, é realizada a primeira cobrança\n3. As cobranças subsequentes ocorrem automaticamente de acordo com a `frequency` definida\n4. O sistema respeita o `tolerancePeriod` para tentativas de cobrança em caso de falha\n5. A assinatura pode ter duração limitada (`duration`) ou ser vitalícia\n6. É possível definir uma data de expiração (`expirationDate`) para encerramento automático\n\n**Vantagens:**\n- Automatização de cobranças recorrentes\n- Gestão simplificada de assinaturas\n- Suporte a diferentes frequências de cobrança\n- Possibilidade de split entre subcontas\n- Período de tolerância para tentativas de cobrança\n- Flexibilidade na duração e expiração\n\n**Validações importantes:**\n- O cliente e o cartão devem existir e estar ativos\n- A data de início (`dueDate`) não pode ser no passado\n- O valor total dos splits deve somar 100% ou o valor total da assinatura\n- Apenas uma subconta pode ser responsável por chargebacks\n- O período de tolerância é opcional e deve ser maior que 0\n- O valor de setup é opcional e deve ser maior que 100 (R$ 1,00) quando informado",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "customerId",
+                    "tokenizedCardId",
+                    "title",
+                    "amount",
+                    "frequency",
+                    "dueDate"
+                  ],
+                  "properties": {
+                    "customerId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Identificador único do cliente que terá a assinatura",
+                      "example": "536feaf7-014b-4ad3-a2db-f14897bc2275"
+                    },
+                    "tokenizedCardId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Identificador único do cartão tokenizado que será utilizado para as cobranças",
+                      "example": "10aaa074-dd95-4bdb-9618-f81e6fdc1e17"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "Título/descrição da assinatura",
+                      "example": "Plano Premium Mensal"
+                    },
+                    "amount": {
+                      "type": "integer",
+                      "description": "Valor da assinatura em centavos",
+                      "example": 2990
+                    },
+                    "setupAmount": {
+                      "type": "integer",
+                      "description": "Valor de setup do plano em centavos. Opcional. Se preenchido, deve ser maior que 100 (R$ 1,00).",
+                      "example": 1000
+                    },
+                    "frequency": {
+                      "type": "integer",
+                      "description": "Frequência em dias que será cobrado (ex: 7 para semanal, 30 para mensal)",
+                      "example": 30
+                    },
+                    "duration": {
+                      "type": "integer",
+                      "description": "Duração em ciclos (quantas vezes será cobrado). Opcional, se não informado será vitalício.",
+                      "example": 12
+                    },
+                    "dueDate": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "Data de início da cobrança. Não pode ser uma data que já passou.",
+                      "example": "2025-06-04"
+                    },
+                    "expirationDate": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "Data que expira a cobrança. Opcional, se não informado não expira.",
+                      "example": "2026-06-04"
+                    },
+                    "tolerancePeriod": {
+                      "type": "integer",
+                      "description": "Período de tolerância para atrasos em dias. Opcional.",
+                      "example": 5
+                    },
+                    "split": {
+                      "type": "array",
+                      "description": "Array para divisão dos valores entre subcontas",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "subaccountId",
+                          "splitType",
+                          "chargebackLiable"
+                        ],
+                        "properties": {
+                          "subaccountId": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Identificador único da subconta que receberá parte do valor",
+                            "example": "c873d310-d2eb-41da-adaa-36fc8900fb99"
+                          },
+                          "splitType": {
+                            "type": "string",
+                            "enum": ["percentage", "amount"],
+                            "description": "Tipo de divisão do valor (percentual ou valor fixo)",
+                            "example": "percentage"
+                          },
+                          "splitPercentage": {
+                            "type": "number",
+                            "description": "Percentual maior que 0.1 e menor que 100. Obrigatório se splitType for percentage.",
+                            "example": 80
+                          },
+                          "splitAmount": {
+                            "type": "integer",
+                            "description": "Valor em centavos maior que 0. Obrigatório se splitType for amount.",
+                            "example": 80
+                          },
+                          "chargebackLiable": {
+                            "type": "boolean",
+                            "description": "Indica se a subconta será responsável pelos chargebacks. Apenas uma subconta pode ser responsável.",
+                            "example": true
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Assinatura criada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Identificador único da assinatura",
+                            "example": "0b756e37-d852-4aa6-ae10-80e4b35e5cd7"
+                          },
+                          "customerId": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Identificador único do cliente",
+                            "example": "536feaf7-014b-4ad3-a2db-f14897bc2275"
+                          },
+                          "cardId": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Identificador único do cartão tokenizado",
+                            "example": "10aaa074-dd95-4bdb-9618-f81e6fdc1e17"
+                          },
+                          "title": {
+                            "type": "string",
+                            "description": "Título/descrição da assinatura",
+                            "example": "Plano Premium Mensal"
+                          },
+                          "amount": {
+                            "type": "integer",
+                            "description": "Valor da assinatura em centavos",
+                            "example": 2990
+                          },
+                          "setupAmount": {
+                            "type": "integer",
+                            "description": "Valor de setup do plano em centavos",
+                            "example": 1000
+                          },
+                          "frequency": {
+                            "type": "integer",
+                            "description": "Frequência em dias que será cobrado",
+                            "example": 30
+                          },
+                          "duration": {
+                            "type": "integer",
+                            "description": "Duração em ciclos",
+                            "example": 12
+                          },
+                          "dueDate": {
+                            "type": "string",
+                            "format": "date",
+                            "description": "Data de início da cobrança",
+                            "example": "2025-06-04"
+                          },
+                          "expirationDate": {
+                            "type": "string",
+                            "format": "date",
+                            "description": "Data que expira a cobrança",
+                            "example": "2026-06-04"
+                          },
+                          "tolerancePeriod": {
+                            "type": "integer",
+                            "description": "Período de tolerância para atrasos em dias",
+                            "example": 5
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "Status atual da assinatura",
+                            "example": "ACTIVE"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Data e hora de criação da assinatura",
+                            "example": "2025-06-04T23:00:54.887Z"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Data e hora da última atualização da assinatura",
+                            "example": "2025-06-04T23:00:54.887Z"
+                          },
+                          "canceledAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "nullable": true,
+                            "description": "Data e hora do cancelamento da assinatura, se cancelada",
+                            "example": null
+                          },
+                          "splits": {
+                            "type": "array",
+                            "description": "Array com a divisão dos valores entre subcontas",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "subaccountId": {
+                                  "type": "string",
+                                  "format": "uuid",
+                                  "description": "Identificador único da subconta",
+                                  "example": "c873d310-d2eb-41da-adaa-36fc8900fb99"
+                                },
+                                "splitType": {
+                                  "type": "string",
+                                  "description": "Tipo de divisão do valor",
+                                  "example": "percentage"
+                                },
+                                "splitPercentage": {
+                                  "type": "number",
+                                  "description": "Percentual do valor",
+                                  "example": 80
+                                },
+                                "splitAmount": {
+                                  "type": "integer",
+                                  "nullable": true,
+                                  "description": "Valor fixo em centavos",
+                                  "example": null
+                                },
+                                "liquidAmount": {
+                                  "type": "integer",
+                                  "description": "Valor líquido que a subconta receberá em centavos",
+                                  "example": 2392
+                                },
+                                "chargebackLiable": {
+                                  "type": "boolean",
+                                  "description": "Indica se a subconta é responsável por chargebacks",
+                                  "example": true
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Assinatura criada com sucesso"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro na criação da assinatura",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          },
+                          "returnCode": {
+                            "type": "integer"
+                          },
+                          "errors": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "subaccountId": {
+                                  "type": "string",
+                                  "format": "uuid"
+                                },
+                                "errors": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "message": {
+                                        "type": "string"
+                                      },
+                                      "returnCode": {
+                                        "type": "integer"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "examples": {
+                    "Erro genérico": {
+                      "value": {
+                        "data": {
+                          "message": "Erro ao criar assinatura",
+                          "returnCode": -7600
+                        }
+                      }
+                    },
+                    "Cliente não encontrado": {
+                      "value": {
+                        "data": {
+                          "message": "Cliente não encontrado",
+                          "returnCode": -7611,
+                          "errors": null
+                        }
+                      }
+                    },
+                    "Cartão não encontrado": {
+                      "value": {
+                        "data": {
+                          "message": "Cartão não encontrado",
+                          "returnCode": -7612,
+                          "errors": null
+                        }
+                      }
+                    },
+                    "Erro nos splits": {
+                      "value": {
+                        "data": {
+                          "message": "Ocorreram erros no campo de splits, verifique e corrija os dados",
+                          "returnCode": -7600,
+                          "errors": [
+                            {
+                              "subaccountId": "550e8400-e29b-41d4-a716-446655440002",
+                              "errors": [
+                                {
+                                  "message": "Subconta 550e8400-e29b-41d4-a716-446655440002 não encontrada",
+                                  "returnCode": -7303
+                                }
+                              ]
+                            },
+                            {
+                              "subaccountId": "550e8400-e29b-41d4-a716-446655440003",
+                              "errors": [
+                                {
+                                  "message": "Subconta 550e8400-e29b-41d4-a716-446655440003 não encontrada",
+                                  "returnCode": -7303
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "Valor dos splits excede limite": {
+                      "value": {
+                        "data": {
+                          "message": "O valor total dos splits mais as taxas ultrapassa o valor da assinatura",
+                          "returnCode": -7605,
+                          "errors": null
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "components": {

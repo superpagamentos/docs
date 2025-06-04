@@ -80,9 +80,9 @@
             ]
           },
           {
-            "group": "Planos e Assinaturas",
+            "group": "Assinaturas de Recorrência",
             "pages": [
-              "api-reference/endpoint/plans/create"
+              "api-reference/endpoint/subscriptions/create"
             ]
           },
           {
