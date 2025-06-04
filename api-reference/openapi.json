@@ -742,22 +742,10 @@
       },
       "/customers": {
         "post": {
-          "description": "Cria um novo cliente no sistema. Nenhum campo é obrigatório, exceto os campos do endereço quando informado.\n\n**Operação em subconta:**\nPara criar um cliente em uma subconta específica, inclua o header `x-subaccount-id` com o ID da subconta. Quando este header é fornecido, a operação será realizada no contexto da subconta especificada, em vez da conta principal autenticada.",
+          "description": "Cria um novo cliente no sistema. Nenhum campo é obrigatório, exceto os campos do endereço quando informado.",
           "security": [
             {
               "bearerAuth": []
-            }
-          ],
-          "parameters": [
-            {
-              "name": "x-subaccount-id",
-              "in": "header",
-              "description": "ID da subconta onde a operação será realizada. Quando fornecido, a operação será executada no contexto desta subconta específica.",
-              "required": false,
-              "schema": {
-                "type": "string",
-                "format": "uuid"
-              }
             }
           ],
           "requestBody": {
@@ -1033,23 +1021,13 @@
           }
         },
         "get": {
-          "description": "Lista todos os clientes cadastrados. A resposta inclui informações detalhadas de cada cliente, como dados pessoais, contato e endereço. Os resultados são paginados para melhor performance.\n\n**Operação em subconta:**\nPara listar os clientes de uma subconta específica, inclua o header `x-subaccount-id` com o ID da subconta. Quando este header é fornecido, a operação será realizada no contexto da subconta especificada, em vez da conta principal autenticada.",
+          "description": "Lista todos os clientes cadastrados. A resposta inclui informações detalhadas de cada cliente, como dados pessoais, contato e endereço. Os resultados são paginados para melhor performance.",
           "security": [
             {
               "bearerAuth": []
             }
           ],
           "parameters": [
-            {
-              "name": "x-subaccount-id",
-              "in": "header",
-              "description": "ID da subconta onde a operação será realizada. Quando fornecido, a operação será executada no contexto desta subconta específica.",
-              "required": false,
-              "schema": {
-                "type": "string",
-                "format": "uuid"
-              }
-            },
             {
               "name": "page",
               "in": "query",
@@ -1230,23 +1208,13 @@
       },
       "/customers/{customerId}": {
         "get": {
-          "description": "Busca os dados de um cliente específico. A resposta inclui informações detalhadas do cliente, como dados pessoais, contato e endereço.\n\n**Operação em subconta:**\nPara buscar um cliente específico de uma subconta, inclua o header `x-subaccount-id` com o ID da subconta. Quando este header é fornecido, a operação será realizada no contexto da subconta especificada, em vez da conta principal autenticada.",
+          "description": "Busca os dados de um cliente específico. A resposta inclui informações detalhadas do cliente, como dados pessoais, contato e endereço.",
           "security": [
             {
               "bearerAuth": []
             }
           ],
           "parameters": [
-            {
-              "name": "x-subaccount-id",
-              "in": "header",
-              "description": "ID da subconta onde a operação será realizada. Quando fornecido, a operação será executada no contexto desta subconta específica.",
-              "required": false,
-              "schema": {
-                "type": "string",
-                "format": "uuid"
-              }
-            },
             {
               "name": "customerId",
               "in": "path",
@@ -1406,23 +1374,13 @@
           }
         },
         "put": {
-          "description": "Atualiza os dados de um cliente específico. Nenhum campo é obrigatório, exceto quando o cliente não possui um endereço cadastrado e deseja cadastrar um novo endereço - neste caso, todos os campos do endereço são obrigatórios.\n\n**Operação em subconta:**\nPara atualizar um cliente específico de uma subconta, inclua o header `x-subaccount-id` com o ID da subconta. Quando este header é fornecido, a operação será realizada no contexto da subconta especificada, em vez da conta principal autenticada.",
+          "description": "Atualiza os dados de um cliente específico. Nenhum campo é obrigatório, exceto quando o cliente não possui um endereço cadastrado e deseja cadastrar um novo endereço - neste caso, todos os campos do endereço são obrigatórios.",
           "security": [
             {
               "bearerAuth": []
             }
           ],
           "parameters": [
-            {
-              "name": "x-subaccount-id",
-              "in": "header",
-              "description": "ID da subconta onde a operação será realizada. Quando fornecido, a operação será executada no contexto desta subconta específica.",
-              "required": false,
-              "schema": {
-                "type": "string",
-                "format": "uuid"
-              }
-            },
             {
               "name": "customerId",
               "in": "path",
@@ -1669,23 +1627,13 @@
           }
         },
         "delete": {
-          "description": "Remove um cliente específico do sistema. Esta operação é irreversível e deve ser utilizada com cautela.\n\n**Operação em subconta:**\nPara remover um cliente específico de uma subconta, inclua o header `x-subaccount-id` com o ID da subconta. Quando este header é fornecido, a operação será realizada no contexto da subconta especificada, em vez da conta principal autenticada.",
+          "description": "Remove um cliente específico do sistema. Esta operação é irreversível e deve ser utilizada com cautela.",
           "security": [
             {
               "bearerAuth": []
             }
           ],
           "parameters": [
-            {
-              "name": "x-subaccount-id",
-              "in": "header",
-              "description": "ID da subconta onde a operação será realizada. Quando fornecido, a operação será executada no contexto desta subconta específica.",
-              "required": false,
-              "schema": {
-                "type": "string",
-                "format": "uuid"
-              }
-            },
             {
               "name": "customerId",
               "in": "path",
@@ -1769,22 +1717,10 @@
       },
       "/cards/tokenize": {
         "post": {
-          "description": "Tokeniza um cartão de crédito e o associa a um cliente específico. A tokenização é um processo de segurança que substitui os dados sensíveis do cartão por um token único e seguro. Este token pode ser utilizado para realizar compras futuras sem a necessidade de informar novamente os dados do cartão.\n\n**Importante:**\n- Os dados do cartão são criptografados e armazenados de forma segura\n- O token gerado é único e específico para cada cartão\n- O token pode ser utilizado apenas para o cliente ao qual foi associado\n- A tokenização reduz riscos de segurança ao não expor os dados reais do cartão\n\n**Operação em subconta:**\nPara tokenizar um cartão em uma subconta específica, inclua o header `x-subaccount-id` com o ID da subconta. Quando este header é fornecido, a operação será realizada no contexto da subconta especificada, em vez da conta principal autenticada.",
+          "description": "Tokeniza um cartão de crédito e o associa a um cliente específico. A tokenização é um processo de segurança que substitui os dados sensíveis do cartão por um token único e seguro. Este token pode ser utilizado para realizar compras futuras sem a necessidade de informar novamente os dados do cartão.\n\n**Importante:**\n- Os dados do cartão são criptografados e armazenados de forma segura\n- O token gerado é único e específico para cada cartão\n- O token pode ser utilizado apenas para o cliente ao qual foi associado\n- A tokenização reduz riscos de segurança ao não expor os dados reais do cartão",
           "security": [
             {
               "bearerAuth": []
-            }
-          ],
-          "parameters": [
-            {
-              "name": "x-subaccount-id",
-              "in": "header",
-              "description": "ID da subconta onde a operação será realizada. Quando fornecido, a operação será executada no contexto desta subconta específica.",
-              "required": false,
-              "schema": {
-                "type": "string",
-                "format": "uuid"
-              }
             }
           ],
           "requestBody": {
@@ -1973,23 +1909,13 @@
       },
       "/cards/{tokenizedCardId}": {
         "get": {
-          "description": "Busca os dados de um cartão tokenizado específico. Esta rota retorna informações parciais do cartão (apenas os primeiros e últimos 4 dígitos) por questões de segurança, mantendo os dados sensíveis protegidos.\n\n**Importante:**\n- Apenas os primeiros e últimos 4 dígitos do cartão são retornados\n- Os dados completos do cartão nunca são expostos na API\n- O cartão só pode ser consultado se pertencer ao cliente associado\n\n**Operação em subconta:**\nPara buscar um cartão tokenizado de uma subconta específica, inclua o header `x-subaccount-id` com o ID da subconta. Quando este header é fornecido, a operação será realizada no contexto da subconta especificada, em vez da conta principal autenticada.",
+          "description": "Busca os dados de um cartão tokenizado específico. Esta rota retorna informações parciais do cartão (apenas os primeiros e últimos 4 dígitos) por questões de segurança, mantendo os dados sensíveis protegidos.\n\n**Importante:**\n- Apenas os primeiros e últimos 4 dígitos do cartão são retornados\n- Os dados completos do cartão nunca são expostos na API\n- O cartão só pode ser consultado se pertencer ao cliente associado",
           "security": [
             {
               "bearerAuth": []
             }
           ],
           "parameters": [
-            {
-              "name": "x-subaccount-id",
-              "in": "header",
-              "description": "ID da subconta onde a operação será realizada. Quando fornecido, a operação será executada no contexto desta subconta específica.",
-              "required": false,
-              "schema": {
-                "type": "string",
-                "format": "uuid"
-              }
-            },
             {
               "name": "tokenizedCardId",
               "in": "path",
@@ -2132,23 +2058,13 @@
           }
         },
         "delete": {
-          "description": "Remove um cartão tokenizado específico. Esta operação é irreversível e deve ser utilizada com cautela. Após a remoção, o token não poderá mais ser utilizado para realizar transações.\n\n**Importante:**\n- A operação é irreversível\n- O cartão só pode ser removido se pertencer ao cliente associado\n- Após a remoção, o token não poderá mais ser utilizado\n\n**Operação em subconta:**\nPara remover um cartão tokenizado de uma subconta específica, inclua o header `x-subaccount-id` com o ID da subconta. Quando este header é fornecido, a operação será realizada no contexto da subconta especificada, em vez da conta principal autenticada.",
+          "description": "Remove um cartão tokenizado específico. Esta operação é irreversível e deve ser utilizada com cautela. Após a remoção, o token não poderá mais ser utilizado para realizar transações.\n\n**Importante:**\n- A operação é irreversível\n- O cartão só pode ser removido se pertencer ao cliente associado\n- Após a remoção, o token não poderá mais ser utilizado",
           "security": [
             {
               "bearerAuth": []
             }
           ],
           "parameters": [
-            {
-              "name": "x-subaccount-id",
-              "in": "header",
-              "description": "ID da subconta onde a operação será realizada. Quando fornecido, a operação será executada no contexto desta subconta específica.",
-              "required": false,
-              "schema": {
-                "type": "string",
-                "format": "uuid"
-              }
-            },
             {
               "name": "tokenizedCardId",
               "in": "path",
