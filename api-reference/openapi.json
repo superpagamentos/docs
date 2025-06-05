@@ -2532,6 +2532,117 @@
               }
             }
           }
+        },
+        "get": {
+          "description": "Lista todas as assinaturas da companhia. A resposta inclui informações detalhadas de cada assinatura, como dados do plano, splits e status. Os resultados são paginados para melhor performance.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "limit",
+              "in": "query",
+              "description": "Limite de itens por página",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "default": 10,
+                "minimum": 1,
+                "maximum": 100
+              }
+            },
+            {
+              "name": "page",
+              "in": "query",
+              "description": "Página atual",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "default": 1,
+                "minimum": 1
+              }
+            },
+            {
+              "name": "title",
+              "in": "query",
+              "description": "Filtrar pelo título",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "amount",
+              "in": "query",
+              "description": "Filtrar pelo valor do plano",
+              "required": false,
+              "schema": {
+                "type": "number"
+              }
+            },
+            {
+              "name": "setupAmount",
+              "in": "query",
+              "description": "Filtrar pelo valor do setup do plano",
+              "required": false,
+              "schema": {
+                "type": "number"
+              }
+            },
+            {
+              "name": "frequency",
+              "in": "query",
+              "description": "Filtrar pela frequência",
+              "required": false,
+              "schema": {
+                "type": "integer"
+              }
+            },
+            {
+              "name": "dueDate",
+              "in": "query",
+              "description": "Filtrar pela data de início",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "format": "date"
+              }
+            },
+            {
+              "name": "status",
+              "in": "query",
+              "description": "Filtrar pelo status",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "enum": ["ACTIVE", "DELETED", "EXPIRED", "SUSPENDED"]
+              }
+            },
+            {
+              "name": "subaccountId",
+              "in": "query",
+              "description": "Subconta presente no split",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Listagem de assinaturas",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/listSubscriptionsResponse"
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -4125,6 +4236,156 @@
             "message": {
               "type": "string",
               "example": "Subconta encontrada com sucesso"
+            }
+          }
+        },
+        "subscriptionSplit": {
+          "type": "object",
+          "properties": {
+            "subaccountId": {
+              "type": "string",
+              "format": "uuid",
+              "description": "ID da subconta que receberá o split"
+            },
+            "splitType": {
+              "type": "string",
+              "enum": ["PERCENTAGE", "AMOUNT"],
+              "description": "Tipo do split (percentual ou valor fixo)"
+            },
+            "splitPercentage": {
+              "type": "number",
+              "description": "Percentual do split (quando splitType é PERCENTAGE)"
+            },
+            "splitAmount": {
+              "type": "number",
+              "description": "Valor fixo do split (quando splitType é AMOUNT)"
+            },
+            "liquidAmount": {
+              "type": "number",
+              "description": "Valor líquido que a subconta receberá"
+            },
+            "chargebackLiable": {
+              "type": "boolean",
+              "description": "Indica se a subconta é responsável por chargebacks"
+            }
+          }
+        },
+        "subscription": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "ID da assinatura"
+            },
+            "customerId": {
+              "type": "string",
+              "format": "uuid",
+              "description": "ID do cliente"
+            },
+            "cardId": {
+              "type": "string",
+              "format": "uuid",
+              "description": "ID do cartão"
+            },
+            "title": {
+              "type": "string",
+              "description": "Título do plano"
+            },
+            "amount": {
+              "type": "number",
+              "description": "Valor do plano em centavos"
+            },
+            "setupAmount": {
+              "type": "number",
+              "description": "Valor do setup em centavos"
+            },
+            "frequency": {
+              "type": "integer",
+              "description": "Frequência de cobrança em dias"
+            },
+            "duration": {
+              "type": "integer",
+              "description": "Duração do plano em meses"
+            },
+            "dueDate": {
+              "type": "string",
+              "format": "date",
+              "description": "Data de início da assinatura"
+            },
+            "expirationDate": {
+              "type": "string",
+              "format": "date",
+              "description": "Data de expiração da assinatura"
+            },
+            "tolerancePeriod": {
+              "type": "integer",
+              "description": "Período de tolerância em dias"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["ACTIVE", "DELETED", "EXPIRED", "SUSPENDED"],
+              "description": "Status da assinatura"
+            },
+            "splits": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/subscriptionSplit"
+              },
+              "maxItems": 20,
+              "description": "Lista de splits da assinatura"
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Data de criação da assinatura"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Data de atualização da assinatura"
+            },
+            "canceledAt": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true,
+              "description": "Data de cancelamento da assinatura"
+            }
+          }
+        },
+        "listSubscriptionsResponse": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/subscription"
+              }
+            },
+            "meta": {
+              "type": "object",
+              "properties": {
+                "total": {
+                  "type": "integer",
+                  "description": "Total de itens encontrados"
+                },
+                "page": {
+                  "type": "integer",
+                  "description": "Página atual"
+                },
+                "limit": {
+                  "type": "integer",
+                  "description": "Limite de itens por página"
+                },
+                "totalPages": {
+                  "type": "integer",
+                  "description": "Total de páginas"
+                }
+              }
+            },
+            "message": {
+              "type": "string",
+              "nullable": true
             }
           }
         }
