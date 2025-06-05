@@ -84,6 +84,7 @@
             "pages": [
               "api-reference/endpoint/subscriptions/create",
               "api-reference/endpoint/subscriptions/suspend",
+              "api-reference/endpoint/subscriptions/reactivate",
               "api-reference/endpoint/subscriptions/list",
               "api-reference/endpoint/subscriptions/get"
             ]

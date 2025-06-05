@@ -2798,6 +2798,101 @@
             }
           }
         }
+      },
+      "/subscriptions/{subscriptionId}/reactivate": {
+        "post": {
+          "description": "Reativa uma assinatura que está suspensa. Ao reativar uma assinatura, os cobramentos automáticos serão retomados de acordo com o plano e periodicidade configurados.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "subscriptionId",
+              "in": "path",
+              "description": "ID da assinatura que será reativada",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Assinatura reativada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "b84f592c-7db6-44fa-b783-4a327156880b"
+                          },
+                          "status": {
+                            "type": "string",
+                            "example": "ACTIVE"
+                          }
+                        }
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Assinatura reativada com sucesso"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro ao reativar a assinatura",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          },
+                          "returnCode": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "examples": {
+                    "Assinatura não está suspensa": {
+                      "value": {
+                        "data": {
+                          "message": "Assinatura não está suspensa",
+                          "returnCode": -7618
+                        }
+                      }
+                    },
+                    "Assinatura não encontrada": {
+                      "value": {
+                        "data": {
+                          "message": "Assinatura não encontrada",
+                          "returnCode": -7601
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "components": {
