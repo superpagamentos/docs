@@ -2225,7 +2225,8 @@
                     },
                     "split": {
                       "type": "array",
-                      "description": "Array para divisão dos valores entre subcontas",
+                      "description": "Array para divisão dos valores entre subcontas. Pode ser feito até 20 splits por pagamento.",
+                      "maxItems": 20,
                       "items": {
                         "type": "object",
                         "required": [
