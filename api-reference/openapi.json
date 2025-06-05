@@ -2644,6 +2644,65 @@
             }
           }
         }
+      },
+      "/subscriptions/{subscriptionId}": {
+        "get": {
+          "description": "Recupera os dados detalhados de uma assinatura específica. A resposta inclui informações como dados do cliente, valores, frequência, splits e status da assinatura.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "subscriptionId",
+              "in": "path",
+              "description": "ID da assinatura que deseja consultar",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Assinatura encontrada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/subscriptionDetailsResponse"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Assinatura não encontrada",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "example": "Assinatura não encontrada"
+                          },
+                          "returnCode": {
+                            "type": "integer",
+                            "example": -1000
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "components": {
@@ -4254,10 +4313,12 @@
             },
             "splitPercentage": {
               "type": "number",
+              "nullable": true,
               "description": "Percentual do split (quando splitType é PERCENTAGE)"
             },
             "splitAmount": {
               "type": "number",
+              "nullable": true,
               "description": "Valor fixo do split (quando splitType é AMOUNT)"
             },
             "liquidAmount": {
@@ -4268,7 +4329,8 @@
               "type": "boolean",
               "description": "Indica se a subconta é responsável por chargebacks"
             }
-          }
+          },
+          "required": ["subaccountId", "splitType", "liquidAmount", "chargebackLiable"]
         },
         "subscription": {
           "type": "object",
@@ -4388,6 +4450,102 @@
               "nullable": true
             }
           }
+        },
+        "subscriptionDetails": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "ID da assinatura"
+            },
+            "customerId": {
+              "type": "string",
+              "format": "uuid",
+              "description": "ID do cliente"
+            },
+            "cardId": {
+              "type": "string",
+              "format": "uuid",
+              "description": "ID do cartão de crédito"
+            },
+            "title": {
+              "type": "string",
+              "description": "Título da assinatura"
+            },
+            "amount": {
+              "type": "number",
+              "description": "Valor total da assinatura em centavos"
+            },
+            "setupAmount": {
+              "type": "number",
+              "description": "Valor de setup em centavos"
+            },
+            "frequency": {
+              "type": "integer",
+              "description": "Frequência de cobrança em dias"
+            },
+            "duration": {
+              "type": "integer",
+              "description": "Duração total da assinatura em meses"
+            },
+            "dueDate": {
+              "type": "string",
+              "format": "date",
+              "description": "Data de vencimento da assinatura"
+            },
+            "expirationDate": {
+              "type": "string",
+              "format": "date",
+              "description": "Data de expiração da assinatura"
+            },
+            "tolerancePeriod": {
+              "type": "integer",
+              "description": "Período de tolerância em dias"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["ACTIVE", "CANCELED", "EXPIRED"],
+              "description": "Status da assinatura"
+            },
+            "splits": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/subscriptionSplit"
+              },
+              "description": "Lista de splits da assinatura"
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Data de criação da assinatura"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Data da última atualização da assinatura"
+            },
+            "canceledAt": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true,
+              "description": "Data de cancelamento da assinatura"
+            }
+          },
+          "required": ["id", "customerId", "cardId", "title", "amount", "setupAmount", "frequency", "duration", "dueDate", "expirationDate", "tolerancePeriod", "status", "splits", "createdAt", "updatedAt"]
+        },
+        "subscriptionDetailsResponse": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "$ref": "#/components/schemas/subscriptionDetails"
+            },
+            "message": {
+              "type": "string",
+              "description": "Mensagem de retorno da operação"
+            }
+          },
+          "required": ["data", "message"]
         }
       },
       "securitySchemes": {
