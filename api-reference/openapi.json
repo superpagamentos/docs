@@ -2703,6 +2703,101 @@
             }
           }
         }
+      },
+      "/subscriptions/{subscriptionId}/suspend": {
+        "post": {
+          "description": "Suspende uma assinatura existente, interrompendo temporariamente as cobranças recorrentes. Esta operação é útil quando o cliente precisa de uma pausa temporária no serviço, mas deseja manter a assinatura para reativação futura.\n\n**Impacto da suspensão:**\n- As cobranças recorrentes são interrompidas imediatamente\n- O cliente não será mais cobrado enquanto a assinatura estiver suspensa\n- A assinatura mantém seu histórico e configurações originais\n- Pode ser reativada a qualquer momento através da rota de reativação\n\n**Observações importantes:**\n- A suspensão é diferente do cancelamento, pois permite reativação posterior\n- O período de suspensão não conta para a duração total da assinatura\n- O cliente mantém acesso aos benefícios até o final do período já pago\n- A reativação pode ser feita a qualquer momento, retomando as cobranças no próximo ciclo",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "subscriptionId",
+              "in": "path",
+              "description": "ID da assinatura que será suspensa",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Assinatura suspensa com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "b84f592c-7db6-44fa-b783-4a327156880b"
+                          },
+                          "status": {
+                            "type": "string",
+                            "example": "SUSPENDED"
+                          }
+                        }
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Assinatura suspensa com sucesso"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro ao suspender assinatura",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          },
+                          "returnCode": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "examples": {
+                    "Assinatura não encontrada": {
+                      "value": {
+                        "data": {
+                          "message": "Assinatura não encontrada",
+                          "returnCode": -7601
+                        }
+                      }
+                    },
+                    "Assinatura já suspensa": {
+                      "value": {
+                        "data": {
+                          "message": "Assinatura já está suspensa",
+                          "returnCode": -7617
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "components": {
