@@ -2248,8 +2248,8 @@
                             "example": "percentage"
                           },
                           "splitPercentage": {
-                            "type": "number",
-                            "description": "Percentual maior que 0.1 e menor que 100. Obrigatório se splitType for percentage.",
+                            "format": "float",
+                            "description": "Percentual maior que 0.1 e menor que 100. Obrigatório se splitType for percentage. Aceita valores decimais com até 2 casas (ex: 80 ou 80.50)",
                             "example": 80
                           },
                           "splitAmount": {
@@ -3512,6 +3512,172 @@
                         "data": {
                           "message": "Não é possível remover o split. A assinatura deve ter pelo menos um split.",
                           "returnCode": -1000
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/subscriptions/add_split": {
+        "post": {
+          "description": "Adiciona um novo split para uma assinatura existente. O split pode ser configurado por valor fixo (amount) ou porcentagem (percentage) do valor da assinatura. É possível definir se a subconta será responsável pelos chargebacks da assinatura através do campo chargebackLiable.\n\n**Importante:**\n- Para splits do tipo 'amount', o campo splitAmount é obrigatório\n- Para splits do tipo 'percentage', o campo splitPercentage é obrigatório\n- O valor total dos splits não pode ultrapassar o valor disponível após a taxa da assinatura\n- A subconta deve estar aprovada para realizar a operação",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "requestBody": {
+            "description": "Dados necessários para adicionar um split à assinatura",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["subscriptionId", "subaccountId", "splitType"],
+                  "properties": {
+                    "subscriptionId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Identificador único da assinatura que receberá o split"
+                    },
+                    "subaccountId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Identificador único da subconta que receberá o split"
+                    },
+                    "splitType": {
+                      "type": "string",
+                      "enum": ["amount", "percentage"],
+                      "description": "Tipo do split. 'amount' para valor fixo ou 'percentage' para porcentagem do valor da assinatura"
+                    },
+                    "splitAmount": {
+                      "type": "integer",
+                      "description": "Valor fixo do split em centavos. Obrigatório quando splitType é 'amount'"
+                    },
+                    "splitPercentage": {
+                      "type": "number",
+                      "format": "float",
+                      "description": "Porcentagem do valor da assinatura que será destinada ao split. Obrigatório quando splitType é 'percentage'. Aceita valores decimais com até 2 casas (ex: 80 ou 80.50)"
+                    },
+                    "chargebackLiable": {
+                      "type": "boolean",
+                      "description": "Define se a subconta será responsável pelos chargebacks da assinatura. Se não informado, o valor padrão é false"
+                    }
+                  }
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Split adicionado com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Identificador único do split criado"
+                          },
+                          "subaccountId": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Identificador único da subconta que recebeu o split"
+                          },
+                          "splitType": {
+                            "type": "string",
+                            "enum": ["AMOUNT", "PERCENTAGE"],
+                            "description": "Tipo do split criado (AMOUNT para valor fixo ou PERCENTAGE para porcentagem)"
+                          },
+                          "splitPercentage": {
+                            "type": ["integer", "null"],
+                            "description": "Porcentagem do valor da assinatura destinada ao split. Null quando splitType é AMOUNT"
+                          },
+                          "splitAmount": {
+                            "type": "integer",
+                            "description": "Valor fixo do split em centavos. Null quando splitType é PERCENTAGE"
+                          },
+                          "liquidAmount": {
+                            "type": "integer",
+                            "description": "Valor líquido do split em centavos após as taxas"
+                          },
+                          "chargebackLiable": {
+                            "type": "boolean",
+                            "description": "Indica se a subconta é responsável pelos chargebacks da assinatura"
+                          }
+                        }
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Split adicionado com sucesso",
+                        "description": "Mensagem de sucesso da operação"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro ao adicionar split",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "description": "Mensagem detalhando o erro ocorrido"
+                          },
+                          "returnCode": {
+                            "type": "integer",
+                            "description": "Código de erro específico da operação"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "examples": {
+                    "Assinatura não encontrada": {
+                      "value": {
+                        "data": {
+                          "message": "Assinatura não encontrada",
+                          "returnCode": -7601
+                        }
+                      }
+                    },
+                    "Subconta não encontrada": {
+                      "value": {
+                        "data": {
+                          "message": "Subconta xxx não encontrada",
+                          "returnCode": -7303
+                        }
+                      }
+                    },
+                    "Subconta não aprovada": {
+                      "value": {
+                        "data": {
+                          "message": "A subconta beff457d-e893-49df-8395-e8b67ab21e7c não está aprovada para realizar esta operação",
+                          "returnCode": -7308
+                        }
+                      }
+                    },
+                    "Valor excede limite": {
+                      "value": {
+                        "data": {
+                          "message": "O valor total dos splits (2992) ultrapassa o valor disponível após a taxa (2892)",
+                          "returnCode": -7605
                         }
                       }
                     }
