@@ -3021,7 +3021,7 @@
           }
         },
         "delete": {
-          "description": "Remove uma assinatura específica. Esta operação é irreversível e deve ser utilizada com cautela.",
+          "description": "Cancela uma assinatura existente. Após o cancelamento, a assinatura não poderá mais ser reativada.",
           "security": [
             {
               "bearerAuth": []
@@ -3031,7 +3031,7 @@
             {
               "name": "subscriptionId",
               "in": "path",
-              "description": "ID da assinatura que será removida",
+              "description": "Identificador único da assinatura que será cancelada",
               "required": true,
               "schema": {
                 "type": "string",
@@ -3041,7 +3041,7 @@
           ],
           "responses": {
             "200": {
-              "description": "Assinatura removida com sucesso",
+              "description": "Assinatura cancelada com sucesso",
               "content": {
                 "application/json": {
                   "schema": {
@@ -3050,17 +3050,24 @@
                       "data": {
                         "type": "object",
                         "properties": {
-                          "message": {
+                          "id": {
                             "type": "string",
-                            "description": "Mensagem de confirmação da remoção da assinatura",
-                            "example": "Assinatura removida com sucesso"
+                            "format": "uuid",
+                            "description": "Identificador único da assinatura",
+                            "example": "b84f592c-7db6-44fa-b783-4a327156880b"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": ["DELETED"],
+                            "description": "Status da assinatura após o cancelamento",
+                            "example": "DELETED"
                           }
                         }
                       },
                       "message": {
                         "type": "string",
-                        "description": "Mensagem de confirmação da operação",
-                        "example": "Assinatura removida com sucesso"
+                        "description": "Mensagem de sucesso",
+                        "example": "Assinatura cancelada com sucesso"
                       }
                     }
                   }
@@ -3068,7 +3075,7 @@
               }
             },
             "400": {
-              "description": "Erro ao remover assinatura",
+              "description": "Erro ao cancelar a assinatura",
               "content": {
                 "application/json": {
                   "schema": {
@@ -3079,30 +3086,32 @@
                         "properties": {
                           "message": {
                             "type": "string",
-                            "description": "Mensagem detalhando o erro ocorrido"
+                            "description": "Mensagem de erro",
+                            "example": "Assinatura já está cancelada"
                           },
                           "returnCode": {
                             "type": "integer",
-                            "description": "Código de erro específico para o tipo de falha"
+                            "description": "Código de retorno do erro",
+                            "example": -7624
                           }
                         }
                       }
                     }
                   },
                   "examples": {
+                    "Assinatura já cancelada": {
+                      "value": {
+                        "data": {
+                          "message": "Assinatura já está cancelada",
+                          "returnCode": -7624
+                        }
+                      }
+                    },
                     "Assinatura não encontrada": {
                       "value": {
                         "data": {
                           "message": "Assinatura não encontrada",
                           "returnCode": -7601
-                        }
-                      }
-                    },
-                    "Erro genérico": {
-                      "value": {
-                        "data": {
-                          "message": "Ocorreu um erro ao remover a assinatura",
-                          "returnCode": -7600
                         }
                       }
                     }
@@ -3678,6 +3687,109 @@
                         "data": {
                           "message": "O valor total dos splits (2992) ultrapassa o valor disponível após a taxa (2892)",
                           "returnCode": -7605
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/cancel": {
+        "delete": {
+          "description": "Cancela uma assinatura existente. Após o cancelamento, a assinatura não poderá mais ser reativada.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "subscriptionId",
+              "in": "path",
+              "description": "Identificador único da assinatura que será cancelada",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Assinatura cancelada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Identificador único da assinatura",
+                            "example": "b84f592c-7db6-44fa-b783-4a327156880b"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": ["DELETED"],
+                            "description": "Status da assinatura após o cancelamento",
+                            "example": "DELETED"
+                          }
+                        }
+                      },
+                      "message": {
+                        "type": "string",
+                        "description": "Mensagem de sucesso",
+                        "example": "Assinatura cancelada com sucesso"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro ao cancelar a assinatura",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "description": "Mensagem de erro",
+                            "example": "Assinatura já está cancelada"
+                          },
+                          "returnCode": {
+                            "type": "integer",
+                            "description": "Código de retorno do erro",
+                            "example": -7624
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "examples": {
+                    "Assinatura já cancelada": {
+                      "value": {
+                        "data": {
+                          "message": "Assinatura já está cancelada",
+                          "returnCode": -7624
+                        }
+                      }
+                    },
+                    "Assinatura não encontrada": {
+                      "value": {
+                        "data": {
+                          "message": "Assinatura não encontrada",
+                          "returnCode": -7601
                         }
                       }
                     }

@@ -86,10 +86,11 @@
               "api-reference/endpoint/subscriptions/list",
               "api-reference/endpoint/subscriptions/get",
               "api-reference/endpoint/subscriptions/update",
+              "api-reference/endpoint/subscriptions/addsplit",
+              "api-reference/endpoint/subscriptions/removesplit",
               "api-reference/endpoint/subscriptions/suspend",
               "api-reference/endpoint/subscriptions/reactivate",
-              "api-reference/endpoint/subscriptions/addsplit",
-              "api-reference/endpoint/subscriptions/removesplit"
+              "api-reference/endpoint/subscriptions/cancel"
             ]
           },
           {
