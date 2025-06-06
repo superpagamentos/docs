@@ -2702,6 +2702,323 @@
               }
             }
           }
+        },
+        "put": {
+          "description": "Atualiza os dados de uma assinatura existente. Esta rota permite atualizar diversos campos da assinatura, exceto os dados de split. Para alterar os dados de split, é necessário utilizar a rota específica para isso.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "subscriptionId",
+              "in": "path",
+              "description": "Identificador único da assinatura",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "Dados que podem ser atualizados na assinatura",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "customerId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "ID do cliente associado à assinatura"
+                    },
+                    "tokenizedCardId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "ID do cartão tokenizado para cobrança"
+                    },
+                    "frequency": {
+                      "type": "integer",
+                      "description": "Frequência em dias que será cobrado (ex: 7 para semanal, 30 para mensal)"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "Título/descrição da assinatura"
+                    },
+                    "amount": {
+                      "type": "integer",
+                      "description": "Valor da assinatura em centavos"
+                    },
+                    "duration": {
+                      "type": "integer",
+                      "description": "Duração em ciclos (quantas vezes será cobrado). Opcional, se não informado será vitalício"
+                    },
+                    "expirationDate": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "Data de expiração da assinatura. Precisa estar no formato YYYY-MM-DD",
+                      "example": "2026-06-06"
+                    }
+                  }
+                }
+              }
+            },
+            "required": false
+          },
+          "responses": {
+            "200": {
+              "description": "Assinatura atualizada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Identificador único da assinatura",
+                            "example": "b84f592c-7db6-44fa-b783-4a327156880b"
+                          },
+                          "customerId": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Identificador único do cliente associado à assinatura",
+                            "example": "536feaf7-014b-4ad3-a2db-f14897bc2275"
+                          },
+                          "tokenizedCardId": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Identificador único do cartão tokenizado associado à assinatura",
+                            "example": "10aaa074-dd95-4bdb-9618-f81e6fdc1e17"
+                          },
+                          "title": {
+                            "type": "string",
+                            "description": "Título da assinatura",
+                            "example": "Teste atualização de título do plano"
+                          },
+                          "amount": {
+                            "type": "integer",
+                            "description": "Valor da assinatura em centavos",
+                            "example": 3990
+                          },
+                          "setupAmount": {
+                            "type": "integer",
+                            "description": "Valor do setup da assinatura em centavos",
+                            "example": 1000
+                          },
+                          "frequency": {
+                            "type": "integer",
+                            "description": "Frequência em dias entre as cobranças",
+                            "example": 15
+                          },
+                          "duration": {
+                            "type": "integer",
+                            "description": "Duração total da assinatura em meses",
+                            "example": 12
+                          },
+                          "dueDate": {
+                            "type": "string",
+                            "format": "date",
+                            "description": "Data de início da assinatura",
+                            "example": "2025-06-04"
+                          },
+                          "expirationDate": {
+                            "type": "string",
+                            "format": "date",
+                            "description": "Data de expiração da assinatura",
+                            "example": "2026-06-06"
+                          },
+                          "tolerancePeriod": {
+                            "type": "integer",
+                            "description": "Período de tolerância em dias",
+                            "example": 5
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": ["ACTIVE", "DELETED", "EXPIRED", "SUSPENDED"],
+                            "description": "Status da assinatura",
+                            "example": "ACTIVE"
+                          },
+                          "splits": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "format": "uuid",
+                                  "description": "Identificador único do split",
+                                  "example": "768cbcdb-82b7-4aee-8900-2d9e89a9f3fc"
+                                },
+                                "subaccountId": {
+                                  "type": "string",
+                                  "format": "uuid",
+                                  "description": "Identificador único da subconta associada ao split",
+                                  "example": "c873d310-d2eb-41da-adaa-36fc8900fb99"
+                                },
+                                "splitType": {
+                                  "type": "string",
+                                  "enum": ["PERCENTAGE", "AMOUNT"],
+                                  "description": "Tipo de split",
+                                  "example": "PERCENTAGE"
+                                },
+                                "splitPercentage": {
+                                  "type": "number",
+                                  "nullable": true,
+                                  "description": "Percentual de split",
+                                  "example": 80
+                                },
+                                "splitAmount": {
+                                  "type": "integer",
+                                  "nullable": true,
+                                  "description": "Valor fixo do split",
+                                  "example": 500
+                                },
+                                "liquidAmount": {
+                                  "type": "integer",
+                                  "description": "Valor líquido do split",
+                                  "example": 2392
+                                },
+                                "chargebackLiable": {
+                                  "type": "boolean",
+                                  "description": "Indica se o split é responsável por chargebacks",
+                                  "example": true
+                                }
+                              }
+                            }
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Data de criação da assinatura",
+                            "example": "2025-06-05T02:54:58.146Z"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Data de atualização da assinatura",
+                            "example": "2025-06-06T02:11:28.818Z"
+                          },
+                          "canceledAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Data de cancelamento da assinatura",
+                            "example": "2025-06-06T02:11:28.818Z"
+                          }
+                        }
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Assinatura atualizada com sucesso"
+                      }
+                    }
+                  },
+                  "example": {
+                    "data": {
+                      "id": "b84f592c-7db6-44fa-b783-4a327156880b",
+                      "customerId": "536feaf7-014b-4ad3-a2db-f14897bc2275",
+                      "tokenizedCardId": "10aaa074-dd95-4bdb-9618-f81e6fdc1e17",
+                      "title": "Teste atualização de título do plano",
+                      "amount": 3990,
+                      "setupAmount": 1000,
+                      "frequency": 15,
+                      "duration": 12,
+                      "dueDate": "2025-06-04",
+                      "expirationDate": "2026-06-06",
+                      "tolerancePeriod": 5,
+                      "status": "ACTIVE",
+                      "splits": [
+                        {
+                          "id": "768cbcdb-82b7-4aee-8900-2d9e89a9f3fc",
+                          "subaccountId": "c873d310-d2eb-41da-adaa-36fc8900fb99",
+                          "splitType": "PERCENTAGE",
+                          "splitPercentage": 80,
+                          "splitAmount": null,
+                          "liquidAmount": 2392,
+                          "chargebackLiable": true
+                        },
+                        {
+                          "id": "4e3e376d-bea9-403d-be3e-5ea36fc60099",
+                          "subaccountId": "beff457d-e893-49df-8395-e8b67ab21e7c",
+                          "splitType": "AMOUNT",
+                          "splitPercentage": null,
+                          "splitAmount": 500,
+                          "liquidAmount": 500,
+                          "chargebackLiable": false
+                        }
+                      ],
+                      "createdAt": "2025-06-05T02:54:58.146Z",
+                      "updatedAt": "2025-06-06T02:11:28.818Z",
+                      "canceledAt": null
+                    },
+                    "message": "Assinatura atualizada com sucesso"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro ao atualizar assinatura",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          },
+                          "returnCode": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "examples": {
+                    "Assinatura não encontrada": {
+                      "value": {
+                        "data": {
+                          "message": "Assinatura não encontrada",
+                          "returnCode": -7601
+                        }
+                      }
+                    },
+                    "Valor dos splits excede limite": {
+                      "value": {
+                        "data": {
+                          "message": "O valor total dos splits (2078) ultrapassa o valor disponível após a taxa (1909)",
+                          "returnCode": -7605
+                        }
+                      }
+                    },
+                    "Cartão não encontrado": {
+                      "value": {
+                        "data": {
+                          "message": "Cartão não encontrado",
+                          "returnCode": -7612
+                        }
+                      }
+                    },
+                    "Cliente não encontrado": {
+                      "value": {
+                        "data": {
+                          "message": "Cliente não encontrado",
+                          "returnCode": -7611
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "/subscriptions/{subscriptionId}/suspend": {
