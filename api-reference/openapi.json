@@ -3019,6 +3019,98 @@
               }
             }
           }
+        },
+        "delete": {
+          "description": "Remove uma assinatura específica. Esta operação é irreversível e deve ser utilizada com cautela.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "subscriptionId",
+              "in": "path",
+              "description": "ID da assinatura que será removida",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Assinatura removida com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "description": "Mensagem de confirmação da remoção da assinatura",
+                            "example": "Assinatura removida com sucesso"
+                          }
+                        }
+                      },
+                      "message": {
+                        "type": "string",
+                        "description": "Mensagem de confirmação da operação",
+                        "example": "Assinatura removida com sucesso"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro ao remover assinatura",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "description": "Mensagem detalhando o erro ocorrido"
+                          },
+                          "returnCode": {
+                            "type": "integer",
+                            "description": "Código de erro específico para o tipo de falha"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "examples": {
+                    "Assinatura não encontrada": {
+                      "value": {
+                        "data": {
+                          "message": "Assinatura não encontrada",
+                          "returnCode": -7601
+                        }
+                      }
+                    },
+                    "Erro genérico": {
+                      "value": {
+                        "data": {
+                          "message": "Ocorreu um erro ao remover a assinatura",
+                          "returnCode": -7600
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "/subscriptions/{subscriptionId}/suspend": {
@@ -3201,6 +3293,225 @@
                         "data": {
                           "message": "Assinatura não encontrada",
                           "returnCode": -7601
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/subscription/{subscriptionId}/remove_split/{splitId}": {
+        "delete": {
+          "description": "Remove um split específico de uma assinatura. Após a remoção do split, a subconta associada não receberá mais splits dos pagamentos do mês em diante. Esta operação é irreversível e deve ser utilizada com cautela.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "subscriptionId",
+              "in": "path",
+              "description": "Identificador único da assinatura",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            {
+              "name": "splitId",
+              "in": "path",
+              "description": "Identificador único do split que será removido",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Split removido com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "description": "Mensagem de confirmação da remoção do split",
+                            "example": "Split removido com sucesso"
+                          }
+                        }
+                      },
+                      "message": {
+                        "type": "string",
+                        "description": "Mensagem de confirmação da operação",
+                        "example": "Split removido com sucesso"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro ao remover split",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "description": "Mensagem detalhando o erro ocorrido"
+                          },
+                          "returnCode": {
+                            "type": "integer",
+                            "description": "Código de erro específico para o tipo de falha"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "examples": {
+                    "Assinatura não encontrada": {
+                      "value": {
+                        "data": {
+                          "message": "Assinatura não encontrada",
+                          "returnCode": -7601
+                        }
+                      }
+                    },
+                    "Split não encontrado": {
+                      "value": {
+                        "data": {
+                          "message": "Split não encontrado",
+                          "returnCode": -7621
+                        }
+                      }
+                    },
+                    "Erro genérico": {
+                      "value": {
+                        "data": {
+                          "message": "Ocorreu um erro ao remover o split",
+                          "returnCode": -7620
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/remove_split/{splitId}": {
+        "delete": {
+          "description": "Remove um split específico de uma assinatura. Esta operação é irreversível e deve ser utilizada com cautela. Após a remoção do split, o valor total da assinatura será ajustado automaticamente.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "subscriptionId",
+              "in": "path",
+              "description": "Identificador único da assinatura",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            {
+              "name": "splitId",
+              "in": "path",
+              "description": "Identificador único do split que será removido",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Split removido com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "description": "Mensagem de confirmação da remoção do split",
+                            "example": "Split removido com sucesso"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro ao remover split",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "example": "Não é possível remover o split. A assinatura deve ter pelo menos um split."
+                          },
+                          "returnCode": {
+                            "type": "integer",
+                            "example": -1000
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "examples": {
+                    "Split não encontrado": {
+                      "value": {
+                        "data": {
+                          "message": "Split não encontrado",
+                          "returnCode": -1000
+                        }
+                      }
+                    },
+                    "Assinatura não encontrada": {
+                      "value": {
+                        "data": {
+                          "message": "Assinatura não encontrada",
+                          "returnCode": -1000
+                        }
+                      }
+                    },
+                    "Último split": {
+                      "value": {
+                        "data": {
+                          "message": "Não é possível remover o split. A assinatura deve ter pelo menos um split.",
+                          "returnCode": -1000
                         }
                       }
                     }
