@@ -10,7 +10,12 @@
     },
     "servers": [
       {
-        "url": "https://sandbox.superpagamentos.com"
+        "url": "https://sandbox-api.superpagamentos.com",
+        "description": "Ambiente de desenvolvimento"
+      },
+      {
+        "url": "https://api.superpagamentos.com",
+        "description": "Ambiente de produção"
       }
     ],
     "paths": {
@@ -3799,6 +3804,888 @@
             }
           }
         }
+      },
+      "/payments": {
+        "post": {
+          "description": "Cria uma nova transação no método de pagamento selecionado. Essa rota pode ser utilizada para criar transações com cartão de crédito, cartão tokenizado, PIX e boleto. Também é possível realizar splits entre subcontas.\n\n**Tipos de pagamento disponíveis:**\n- Cartão de Crédito: Pagamento direto com cartão de crédito, requerendo dados completos do cliente, endereço e cartão\n- Cartão Tokenizado: Pagamento com cartão de crédito previamente tokenizado\n- PIX: Pagamento instantâneo via PIX\n- Boleto: Geração de boleto bancário",
+          "requestBody": {
+            "description": "Payload para criação de um novo pagamento. O tipo de pagamento determina a estrutura específica dos dados necessários.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "title": "Cartão de crédito",
+                      "type": "object",
+                      "required": ["paymentType", "billingData", "customerData", "cardData"],
+                      "properties": {
+                        "paymentType": {
+                          "type": "string",
+                          "enum": ["card"],
+                          "description": "Método de pagamento a ser utilizado"
+                        },
+                        "billingData": {
+                          "type": "object",
+                          "description": "Dados de faturamento do pagamento",
+                          "required": ["amount", "installments"],
+                          "properties": {
+                            "amount": {
+                              "type": "integer",
+                              "description": "Valor do pagamento em centavos. O valor mínimo para pagamento é 100 (R$ 1,00)",
+                              "example": 10000,
+                              "minimum": 100
+                            },
+                            "installments": {
+                              "type": "integer",
+                              "description": "Número de parcelas, é possível gerar transações entre 1 e 21 parcelas",
+                              "example": 1,
+                              "minimum": 1,
+                              "maximum": 21
+                            },
+                            "postbackUrl": {
+                              "type": "string",
+                              "description": "URL de callback para recebimento de notificações de pagamento",
+                              "example": "https://example.com/callback"
+                            }
+                          }
+                        },
+                        "customerData": {
+                          "type": "object",
+                          "description": "Dados do cliente",
+                          "required": ["firstName", "lastName", "document", "email", "address", "remoteIpv4"],
+                          "properties": {
+                            "remoteIpv4": {
+                              "type": "string",
+                              "description": "IP do tipo IPv4 do cliente (É o IP do cliente. Não informe o IP do seu servidor)",
+                              "example": "192.168.1.1"
+                            },
+                            "firstName": {
+                              "type": "string",
+                              "description": "Nome do cliente",
+                              "example": "João"
+                            },
+                            "lastName": {
+                              "type": "string",
+                              "description": "Sobrenome do cliente",
+                              "example": "Silva"
+                            },
+                            "document": {
+                              "type": "string",
+                              "description": "Documento do cliente (CPF ou CNPJ)",
+                              "example": "12345678909"
+                            },
+                            "email": {
+                              "type": "string",
+                              "description": "Email do cliente",
+                              "example": "joao.silva@email.com"
+                            },
+                            "phone": {
+                              "type": "string",
+                              "description": "Telefone do cliente (opcional)",
+                              "example": "11999999999"
+                            },
+                            "address": {
+                              "type": "object",
+                              "required": ["street", "streetNumber", "neighborhood", "city", "state", "zipcode"],
+                              "properties": {
+                                "street": {
+                                  "type": "string",
+                                  "description": "Rua do endereço",
+                                  "example": "Rua das Flores"
+                                },
+                                "streetNumber": {
+                                  "type": "integer",
+                                  "description": "Número do endereço",
+                                  "example": 123
+                                },
+                                "neighborhood": {
+                                  "type": "string",
+                                  "description": "Bairro",
+                                  "example": "Centro"
+                                },
+                                "city": {
+                                  "type": "string",
+                                  "description": "Cidade",
+                                  "example": "São Paulo"
+                                },
+                                "state": {
+                                  "type": "string",
+                                  "description": "Estado (UF)",
+                                  "example": "SP"
+                                },
+                                "complement": {
+                                  "type": "string",
+                                  "description": "Complemento do endereço (opcional)",
+                                  "example": "Apto 123"
+                                },
+                                "reference": {
+                                  "type": "string",
+                                  "description": "Ponto de referência (opcional)",
+                                  "example": "Próximo ao shopping"
+                                },
+                                "zipcode": {
+                                  "type": "string",
+                                  "description": "CEP",
+                                  "example": "01234567"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "cardData": {
+                          "type": "object",
+                          "description": "Dados do cartão de crédito",
+                          "required": ["cardNumber", "holderName", "expirationMonth", "expirationYear", "securityCode"],
+                          "properties": {
+                            "cardNumber": {
+                              "type": "string",
+                              "description": "Número do cartão de crédito. Precisa ter entre 13 e 16 dígitos",
+                              "example": "4532650104137832"
+                            },
+                            "holderName": {
+                              "type": "string",
+                              "description": "Nome gravado no cartão",
+                              "example": "João Silva"
+                            },
+                            "expirationMonth": {
+                              "type": "string",
+                              "description": "Mês de expiração do cartão. Precisa estar no formato MM (2 dígitos)",
+                              "example": "12"
+                            },
+                            "expirationYear": {
+                              "type": "string",
+                              "description": "Ano de expiração do cartão. Precisa estar no formato YYYY (4 dígitos)",
+                              "example": "2024"
+                            },
+                            "securityCode": {
+                              "type": "string",
+                              "description": "Código de segurança do cartão (CVV). Precisa ter entre 3 e 4 dígitos",
+                              "example": "123"
+                            }
+                          }
+                        },
+                        "splits": {
+                          "type": "array",
+                          "description": "Configuração de splits do pagamento (opcional)",
+                          "items": {
+                            "type": "object",
+                            "required": ["subaccountId", "splitType", "chargebackLiable"],
+                            "properties": {
+                              "subaccountId": {
+                                "type": "string",
+                                "description": "ID da subconta que receberá o split",
+                                "example": "beff457d-e893-49df-8395-e8b67ab21e7c"
+                              },
+                              "splitType": {
+                                "type": "string",
+                                "enum": ["amount", "percentage"],
+                                "description": "Tipo do split (valor fixo ou percentual)"
+                              },
+                              "splitPercentage": {
+                                "type": "integer",
+                                "description": "Percentual do split (Obrigatório para splitType = percentage). Lembre-se de que esse percentual é calculado com base no valor total da transação, ou seja, o calculo não desconsidera as taxas da sua conta!",
+                                "minimum": 0,
+                                "maximum": 100,
+                                "example": 10
+                              },
+                              "splitAmount": {
+                                "type": "integer",
+                                "description": "Valor do split em centavos (Obrigatório para splitType = amount). Lembre-se de que esse valor é calculado com base no valor total da transação, ou seja, o calculo não desconsidera as taxas da sua conta!",
+                                "example": 450
+                              },
+                              "chargebackLiable": {
+                                "type": "boolean",
+                                "description": "Indica se a subconta é responsável por chargebacks. Só é permitido ter uma subconta responsável por chargebacks por transação, caso informe mais de uma, retornará erro!"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Cartão de Crédito Tokenizado",
+                      "type": "object",
+                      "required": ["paymentType", "billingData", "cardData"],
+                      "properties": {
+                        "paymentType": {
+                          "type": "string",
+                          "enum": ["card"],
+                          "description": "Método de pagamento a ser utilizado"
+                        },
+                        "billingData": {
+                          "type": "object",
+                          "description": "Dados de faturamento do pagamento",
+                          "required": ["amount", "installments"],
+                          "properties": {
+                            "amount": {
+                              "type": "integer",
+                              "description": "Valor do pagamento em centavos. O valor mínimo para pagamento é 100 (R$ 1,00)",
+                              "example": 10000,
+                              "minimum": 100
+                            },
+                            "installments": {
+                              "type": "integer",
+                              "description": "Número de parcelas, é possível gerar transações entre 1 e 21 parcelas",
+                              "example": 1,
+                              "minimum": 1,
+                              "maximum": 21
+                            },
+                            "postbackUrl": {
+                              "type": "string",
+                              "description": "URL de callback para recebimento de notificações de pagamento",
+                              "example": "https://example.com/callback"
+                            }
+                          }
+                        },
+                        "cardData": {
+                          "type": "object",
+                          "description": "Dados do cartão de crédito",
+                          "required": ["id"],
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "description": "ID do cartão tokenizado",
+                              "example": "jd9278sk2h-a1fs-s8u2-82is-82jl297ak26d"
+                            }
+                          }
+                        },
+                        "splits": {
+                          "type": "array",
+                          "description": "Configuração de splits do pagamento (opcional)",
+                          "items": {
+                            "type": "object",
+                            "required": ["subaccountId", "splitType", "chargebackLiable"],
+                            "properties": {
+                              "subaccountId": {
+                                "type": "string",
+                                "description": "ID da subconta que receberá o split",
+                                "example": "beff457d-e893-49df-8395-e8b67ab21e7c"
+                              },
+                              "splitType": {
+                                "type": "string",
+                                "enum": ["amount", "percentage"],
+                                "description": "Tipo do split (valor fixo ou percentual)"
+                              },
+                              "splitPercentage": {
+                                "type": "integer",
+                                "description": "Percentual do split (Obrigatório para splitType = percentage). Lembre-se de que esse percentual é calculado com base no valor total da transação, ou seja, o calculo não desconsidera as taxas da sua conta!",
+                                "minimum": 0,
+                                "maximum": 100,
+                                "example": 10
+                              },
+                              "splitAmount": {
+                                "type": "integer",
+                                "description": "Valor do split em centavos (Obrigatório para splitType = amount). Lembre-se de que esse valor é calculado com base no valor total da transação, ou seja, o calculo não desconsidera as taxas da sua conta!",
+                                "example": 450
+                              },
+                              "chargebackLiable": {
+                                "type": "boolean",
+                                "description": "Indica se a subconta é responsável por chargebacks. Só é permitido ter uma subconta responsável por chargebacks por transação, caso informe mais de uma, retornará erro!"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "PIX",
+                      "type": "object",
+                      "required": ["paymentType", "billingData"],
+                      "properties": {
+                        "paymentType": {
+                          "type": "string",
+                          "enum": ["pix"],
+                          "description": "Método de pagamento a ser utilizado"
+                        },
+                        "billingData": {
+                          "type": "object",
+                          "description": "Dados de faturamento do pagamento",
+                          "required": ["amount"],
+                          "properties": {
+                            "amount": {
+                              "type": "integer",
+                              "description": "Valor do pagamento em centavos. O valor mínimo para pagamento é 100 (R$ 1,00)",
+                              "example": 10000,
+                              "minimum": 100
+                            },
+                            "postbackUrl": {
+                              "type": "string",
+                              "description": "URL de callback para recebimento de notificações de pagamento",
+                              "example": "https://example.com/callback"
+                            }
+                          }
+                        },
+                        "splits": {
+                          "type": "array",
+                          "description": "Configuração de splits do pagamento (opcional)",
+                          "items": {
+                            "type": "object",
+                            "required": ["subaccountId", "splitType", "chargebackLiable"],
+                            "properties": {
+                              "subaccountId": {
+                                "type": "string",
+                                "description": "ID da subconta que receberá o split",
+                                "example": "beff457d-e893-49df-8395-e8b67ab21e7c"
+                              },
+                              "splitType": {
+                                "type": "string",
+                                "enum": ["amount", "percentage"],
+                                "description": "Tipo do split (valor fixo ou percentual)"
+                              },
+                              "splitPercentage": {
+                                "type": "integer",
+                                "description": "Percentual do split (Obrigatório para splitType = percentage). Lembre-se de que esse percentual é calculado com base no valor total da transação, ou seja, o calculo não desconsidera as taxas da sua conta!",
+                                "minimum": 0,
+                                "maximum": 100,
+                                "example": 10
+                              },
+                              "splitAmount": {
+                                "type": "integer",
+                                "description": "Valor do split em centavos (Obrigatório para splitType = amount). Lembre-se de que esse valor é calculado com base no valor total da transação, ou seja, o calculo não desconsidera as taxas da sua conta!",
+                                "example": 450
+                              },
+                              "chargebackLiable": {
+                                "type": "boolean",
+                                "description": "Indica se a subconta é responsável por chargebacks. Só é permitido ter uma subconta responsável por chargebacks por transação, caso informe mais de uma, retornará erro!"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Boleto",
+                      "type": "object",
+                      "required": ["paymentType", "billingData", "customerData", "cardData"],
+                      "properties": {
+                        "paymentType": {
+                          "type": "string",
+                          "enum": ["billet"],
+                          "description": "Método de pagamento a ser utilizado"
+                        },
+                        "billingData": {
+                          "type": "object",
+                          "description": "Dados de faturamento do pagamento",
+                          "required": ["amount", "expirationDate", "paymentLimitDate"],
+                          "properties": {
+                            "amount": {
+                              "type": "integer",
+                              "description": "Valor do pagamento em centavos. O valor mínimo para pagamento é 300 (R$ 3,00). Caso utilize a estrutura de multas/juros, o valor mínimo para pagamento é 3000 (R$ 30,00). O valor máximo para pagamento é 1000000 (R$ 10.000,00)",
+                              "example": 30000,
+                              "minimum": 300,
+                              "maximum": 1000000
+                            },
+                            "expirationDate": {
+                              "type": "string",
+                              "description": "Data de vencimento do boleto no formato YYYY-MM-DD",
+                              "example": "2024-01-01"
+                            },
+                            "paymentLimitDate": {
+                              "type": "string",
+                              "description": "Data de pagamento máximo do boleto no formato YYYY-MM-DD",
+                              "example": "2024-01-01"
+                            },
+                            "logoUrl": {
+                              "type": "string",
+                              "description": "URL da logo do boleto. Caso não seja informada, será utilizada a logo padrão da Super Pagamentos",
+                              "example": "https://example.com/logo.png"
+                            },
+                            "postbackUrl": {
+                              "type": "string",
+                              "description": "URL de callback para recebimento de notificações de pagamento",
+                              "example": "https://example.com/callback"
+                            }
+                          }
+                        },
+                        "customerData": {
+                          "type": "object",
+                          "description": "Dados do cliente",
+                          "required": ["firstName", "lastName", "document", "email", "address", "remoteIpv4", "birthdate", "contactPhone"],
+                          "properties": {
+                            "remoteIpv4": {
+                              "type": "string",
+                              "description": "IP do tipo IPv4 do cliente (É o IP do cliente. Não informe o IP do seu servidor)",
+                              "example": "192.168.1.1"
+                            },
+                            "firstName": {
+                              "type": "string",
+                              "description": "Nome do cliente",
+                              "example": "João"
+                            },
+                            "lastName": {
+                              "type": "string",
+                              "description": "Sobrenome do cliente",
+                              "example": "Silva"
+                            },
+                            "document": {
+                              "type": "string",
+                              "description": "Documento do cliente (CPF ou CNPJ)",
+                              "example": "12345678909"
+                            },
+                            "email": {
+                              "type": "string",
+                              "description": "Email do cliente",
+                              "example": "joao.silva@email.com"
+                            },
+                            "birthdate": {
+                              "type": "string",
+                              "description": "Data de nascimento do cliente",
+                              "example": "1990-01-01"
+                            },
+                            "phone": {
+                              "type": "string",
+                              "description": "Telefone do cliente (opcional)",
+                              "example": "11999999999"
+                            },
+                            "address": {
+                              "type": "object",
+                              "required": ["street", "streetNumber", "neighborhood", "city", "state", "zipcode"],
+                              "properties": {
+                                "street": {
+                                  "type": "string",
+                                  "description": "Rua do endereço",
+                                  "example": "Rua das Flores"
+                                },
+                                "streetNumber": {
+                                  "type": "integer",
+                                  "description": "Número do endereço",
+                                  "example": 123
+                                },
+                                "neighborhood": {
+                                  "type": "string",
+                                  "description": "Bairro",
+                                  "example": "Centro"
+                                },
+                                "city": {
+                                  "type": "string",
+                                  "description": "Cidade",
+                                  "example": "São Paulo"
+                                },
+                                "state": {
+                                  "type": "string",
+                                  "description": "Estado (UF)",
+                                  "example": "SP"
+                                },
+                                "complement": {
+                                  "type": "string",
+                                  "description": "Complemento do endereço (opcional)",
+                                  "example": "Apto 123"
+                                },
+                                "reference": {
+                                  "type": "string",
+                                  "description": "Ponto de referência (opcional)",
+                                  "example": "Próximo ao shopping"
+                                },
+                                "zipcode": {
+                                  "type": "string",
+                                  "description": "CEP",
+                                  "example": "01234567"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "lateFee": {
+                          "type": "object",
+                          "required": ["type", "startDate"],
+                          "description": "Configuração de multas",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": ["fixed", "percentage"],
+                              "description": "Modelo de cobrança da multa. Valor fixo ou percentual baseado no valor total da transação."
+                            },
+                            "feeAmount": {
+                              "type": "integer",
+                              "description": "Valor da multa em centavos. Obrigatório caso o tipo de cobrança \"type\" seja \"fixed\". Confira as regras de cobranças de multas no Guia de Implementação (Multas em boletos) para estar de acordo com a legislação vigente.",
+                              "example": 250
+                            },
+                            "feePercentage": {
+                              "type": "integer",
+                              "description": "Percentual da multa. Obrigatório caso o tipo de cobrança \"type\" seja \"percentage\". Confira as regras de cobranças de multas no Guia de Implementação (Multas em boletos) para estar de acordo com a legislação vigente.",
+                              "example": 1.6
+                            },
+                            "startDate": {
+                              "type": "string",
+                              "description": "Data de início da cobrança da multa no formato YYYY-MM-DD. Caso não seja informada, a data de expiração do boleto será utilizada como data de início da cobrança da multa.",
+                              "example": "2024-01-01"
+                            }
+                          }
+                        },
+                        "interest": {
+                          "type": "object",
+                          "description": "Configuração de juros",
+                          "required": ["type"],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": ["dailyAmount", "dailyPercentage", "monthlyPercentage"],
+                              "description": "Tipo de cobrança de juros. Valor fixo por dia, percentual por dia ou percentual por mês."
+                            },
+                            "amount": {
+                              "type": "integer",
+                              "description": "Valor da multa em centavos. Obrigatório caso o tipo de cobrança \"type\" seja \"dailyAmount\". Confira as regras de cobranças de juros no Guia de Implementação (Juros em boletos) para estar de acordo com a legislação vigente.",
+                              "example": 250
+                            },
+                            "percentage": {
+                              "type": "integer",
+                              "description": "Percentual de juros. Obrigatório caso o tipo de cobrança \"type\" seja \"dailyPercentage\" ou \"monthlyPercentage\". Confira as regras de cobranças de juros no Guia de Implementação (Juros em boletos) para estar de acordo com a legislação vigente.",
+                              "example": 1.6
+                            },
+                            "startDate": {
+                              "type": "string",
+                              "description": "Data de início da cobrança de juros no formato YYYY-MM-DD. Caso não seja informada, a data de expiração do boleto será utilizada como data de início da cobrança de juros.",
+                              "example": "2024-01-01"
+                            }
+                          }
+                        },
+                        "splits": {
+                          "type": "array",
+                          "description": "Configuração de splits do pagamento (opcional)",
+                          "items": {
+                            "type": "object",
+                            "required": ["subaccountId", "splitType", "chargebackLiable"],
+                            "properties": {
+                              "subaccountId": {
+                                "type": "string",
+                                "description": "ID da subconta que receberá o split",
+                                "example": "beff457d-e893-49df-8395-e8b67ab21e7c"
+                              },
+                              "splitType": {
+                                "type": "string",
+                                "enum": ["amount", "percentage"],
+                                "description": "Tipo do split (valor fixo ou percentual)"
+                              },
+                              "splitPercentage": {
+                                "type": "integer",
+                                "description": "Percentual do split (Obrigatório para splitType = percentage). Lembre-se de que esse percentual é calculado com base no valor total da transação, ou seja, o calculo não desconsidera as taxas da sua conta!",
+                                "minimum": 0,
+                                "maximum": 100,
+                                "example": 10
+                              },
+                              "splitAmount": {
+                                "type": "integer",
+                                "description": "Valor do split em centavos (Obrigatório para splitType = amount). Lembre-se de que esse valor é calculado com base no valor total da transação, ou seja, o calculo não desconsidera as taxas da sua conta!",
+                                "example": 450
+                              },
+                              "chargebackLiable": {
+                                "type": "boolean",
+                                "description": "Indica se a subconta é responsável por chargebacks. Só é permitido ter uma subconta responsável por chargebacks por transação, caso informe mais de uma, retornará erro!"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "description": "Pagamento criado com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "4309e70d-fa20-4103-84c6-27370138948b"
+                          },
+                          "status": {
+                            "type": "string",
+                            "example": "SUCCEEDED"
+                          },
+                          "paymentMethod": {
+                            "type": "string",
+                            "example": "card"
+                          },
+                          "currency": {
+                            "type": "string",
+                            "example": "BRL"
+                          },
+                          "amount": {
+                            "type": "integer",
+                            "example": 10000
+                          },
+                          "postbackUrl": {
+                            "type": "string",
+                            "example": ""
+                          },
+                          "installments": {
+                            "type": "integer",
+                            "example": 10
+                          },
+                          "buyerDetails": {
+                            "type": "object",
+                            "properties": {
+                              "firstName": {
+                                "type": "string",
+                                "example": "João"
+                              },
+                              "lastName": {
+                                "type": "string",
+                                "example": "Silva"
+                              },
+                              "email": {
+                                "type": "string",
+                                "example": "joao.silva@email.com"
+                              },
+                              "document": {
+                                "type": "string",
+                                "example": "12345678909"
+                              },
+                              "phone": {
+                                "type": "string",
+                                "nullable": true,
+                                "example": null
+                              },
+                              "street": {
+                                "type": "string",
+                                "example": "Rua das Flores"
+                              },
+                              "streetNumber": {
+                                "type": "integer",
+                                "example": 123
+                              },
+                              "neighborhood": {
+                                "type": "string",
+                                "example": "Centro"
+                              },
+                              "complement": {
+                                "type": "string",
+                                "nullable": true,
+                                "example": null
+                              },
+                              "reference": {
+                                "type": "string",
+                                "nullable": true,
+                                "example": null
+                              },
+                              "city": {
+                                "type": "string",
+                                "example": "São Paulo"
+                              },
+                              "state": {
+                                "type": "string",
+                                "example": "SP"
+                              }
+                            }
+                          },
+                          "cardDetails": {
+                            "type": "object",
+                            "properties": {
+                              "brand": {
+                                "type": "string",
+                                "example": "Visa"
+                              },
+                              "first4Digits": {
+                                "type": "string",
+                                "example": "4532"
+                              },
+                              "last4Digits": {
+                                "type": "string",
+                                "example": "7832"
+                              },
+                              "expirationMonth": {
+                                "type": "string",
+                                "example": "12"
+                              },
+                              "expirationYear": {
+                                "type": "string",
+                                "example": "2024"
+                              }
+                            }
+                          },
+                          "splits": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "subaccountId": {
+                                  "type": "string",
+                                  "format": "uuid",
+                                  "example": "beff457d-e893-49df-8395-e8b67ab21e7c"
+                                },
+                                "splitType": {
+                                  "type": "string",
+                                  "example": "percentage"
+                                },
+                                "splitPercentage": {
+                                  "type": "number",
+                                  "example": 29.33
+                                },
+                                "liquidAmount": {
+                                  "type": "integer",
+                                  "example": 2933
+                                },
+                                "chargebackLiable": {
+                                  "type": "boolean",
+                                  "example": false
+                                }
+                              }
+                            }
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2025-06-09T19:14:20.125Z"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2025-06-09T19:14:20.125Z"
+                          }
+                        }
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Pagamento criado com sucesso"
+                      }
+                    }
+                  },
+                  "examples": {
+                    "Pagamento com cartão": {
+                      "value": {
+                        "data": {
+                          "id": "4309e70d-fa20-4103-84c6-27370138948b",
+                          "status": "SUCCEEDED",
+                          "paymentMethod": "card",
+                          "currency": "BRL",
+                          "amount": 10000,
+                          "postbackUrl": "",
+                          "installments": 10,
+                          "buyerDetails": {
+                            "firstName": "João",
+                            "lastName": "Silva",
+                            "email": "joao.silva@email.com",
+                            "document": "12345678909",
+                            "phone": null,
+                            "street": "Rua das Flores",
+                            "streetNumber": 123,
+                            "neighborhood": "Centro",
+                            "complement": null,
+                            "reference": null,
+                            "city": "São Paulo",
+                            "state": "SP"
+                          },
+                          "cardDetails": {
+                            "brand": "Visa",
+                            "first4Digits": "4532",
+                            "last4Digits": "7832",
+                            "expirationMonth": "12",
+                            "expirationYear": "2024"
+                          },
+                          "splits": [
+                            {
+                              "subaccountId": "beff457d-e893-49df-8395-e8b67ab21e7c",
+                              "splitType": "percentage",
+                              "splitPercentage": 29.33,
+                              "liquidAmount": 2933,
+                              "chargebackLiable": false
+                            }
+                          ],
+                          "createdAt": "2025-06-09T19:14:20.125Z",
+                          "updatedAt": "2025-06-09T19:14:20.125Z"
+                        },
+                        "message": "Pagamento criado com sucesso"
+                      }
+                    },
+                    "Pagamento PIX": {
+                      "value": {
+                        "data": {
+                          "id": "5509e70d-fa20-4103-84c6-27370138948b",
+                          "status": "PENDING",
+                          "paymentMethod": "pix",
+                          "currency": "BRL",
+                          "amount": 5000,
+                          "postbackUrl": "",
+                          "buyerDetails": {
+                            "firstName": "Maria",
+                            "lastName": "Santos",
+                            "email": "maria.santos@email.com",
+                            "document": "98765432109",
+                            "phone": null,
+                            "street": "Avenida Principal",
+                            "streetNumber": 456,
+                            "neighborhood": "Jardim",
+                            "complement": null,
+                            "reference": null,
+                            "city": "Rio de Janeiro",
+                            "state": "RJ"
+                          },
+                          "pixDetails": {
+                            "qrCode": "00020126580014BR.GOV.BCB.PIX0136123e4567-e89b-12d3-a456-426614174000520400005303986540599.905802BR5915NOME DO RECEBEDOR6008BRASILIA62070503***6304E2CA",
+                            "qrCodeImage": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
+                          },
+                          "createdAt": "2025-06-09T19:14:20.125Z",
+                          "updatedAt": "2025-06-09T19:14:20.125Z"
+                        },
+                        "message": "Pagamento PIX criado com sucesso"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro ao criar pagamento",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          },
+                          "returnCode": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "examples": {
+                    "Valores do split excedem os valores disponíveis": {
+                      "value": {
+                        "data": {
+                          "message": "O valor total dos splits (9600) ultrapassa o valor disponível após a taxa (9541)",
+                          "returnCode": -7701
+                        }
+                      }
+                    },
+                    "Dados do cartão inválidos": {
+                      "value": {
+                        "data": {
+                          "message": "Os dados do cartão são inválidos",
+                          "returnCode": -7703
+                        }
+                      }
+                    },
+                    "Erro genérico ao criar pagamento com cartão tokenizado": {
+                      "value": {
+                        "data": {
+                          "message": "Erro ao criar pagamento com cartão tokenizado.",
+                          "returnCode": -7215
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "components": {
@@ -5642,6 +6529,110 @@
             }
           },
           "required": ["data", "message"]
+        },
+        "pixPaymentData": {
+          "type": "object",
+          "required": ["amount", "description"],
+          "properties": {
+            "amount": {
+              "type": "number",
+              "description": "Valor do pagamento em centavos"
+            },
+            "description": {
+              "type": "string",
+              "description": "Descrição do pagamento"
+            },
+            "expirationTime": {
+              "type": "integer",
+              "description": "Tempo de expiração do PIX em segundos"
+            }
+          }
+        },
+        "boletoPaymentData": {
+          "type": "object",
+          "required": ["amount", "description", "dueDate"],
+          "properties": {
+            "amount": {
+              "type": "number",
+              "description": "Valor do boleto em centavos"
+            },
+            "description": {
+              "type": "string",
+              "description": "Descrição do boleto"
+            },
+            "dueDate": {
+              "type": "string",
+              "format": "date",
+              "description": "Data de vencimento do boleto"
+            },
+            "instructions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Instruções do boleto"
+            }
+          }
+        },
+        "creditCardPaymentData": {
+          "type": "object",
+          "required": ["amount", "description", "cardNumber", "cardHolderName", "expirationMonth", "expirationYear", "securityCode"],
+          "properties": {
+            "amount": {
+              "type": "number",
+              "description": "Valor do pagamento em centavos"
+            },
+            "description": {
+              "type": "string",
+              "description": "Descrição do pagamento"
+            },
+            "cardNumber": {
+              "type": "string",
+              "description": "Número do cartão de crédito"
+            },
+            "cardHolderName": {
+              "type": "string",
+              "description": "Nome do titular do cartão"
+            },
+            "expirationMonth": {
+              "type": "string",
+              "description": "Mês de expiração do cartão (MM)"
+            },
+            "expirationYear": {
+              "type": "string",
+              "description": "Ano de expiração do cartão (YYYY)"
+            },
+            "securityCode": {
+              "type": "string",
+              "description": "Código de segurança do cartão"
+            },
+            "installments": {
+              "type": "integer",
+              "description": "Número de parcelas"
+            }
+          }
+        },
+        "tokenizedCreditCardPaymentData": {
+          "type": "object",
+          "required": ["amount", "description", "cardToken"],
+          "properties": {
+            "amount": {
+              "type": "number",
+              "description": "Valor do pagamento em centavos"
+            },
+            "description": {
+              "type": "string",
+              "description": "Descrição do pagamento"
+            },
+            "cardToken": {
+              "type": "string",
+              "description": "Token do cartão de crédito"
+            },
+            "installments": {
+              "type": "integer",
+              "description": "Número de parcelas"
+            }
+          }
         }
       },
       "securitySchemes": {
