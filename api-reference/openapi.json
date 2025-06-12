@@ -4630,6 +4630,58 @@
                         },
                         "message": "Pagamento PIX criado com sucesso"
                       }
+                    },
+                    "Pagamento com Boleto": {
+                      "value": {
+                        "data": {
+                          "id": "4309e70d-fa20-4103-84c6-27370138948b",
+                          "status": "PENDING",
+                          "amount": 10000,
+                          "paymentMethod": "billet",
+                          "postbackUrl": "",
+                          "buyerDetails": {
+                            "firstName": "João",
+                            "lastName": "Silva",
+                            "email": "joao.silva@email.com",
+                            "document": "12345678909",
+                            "phone": null,
+                            "street": "Rua das Flores",
+                            "streetNumber": 123,
+                            "neighborhood": "Centro",
+                            "complement": null,
+                            "reference": null,
+                            "city": "São Paulo",
+                            "state": "SP"
+                          },
+                          "billetDetails": {
+                            "barcode": "<string>",
+                            "digitableLine": "<string>",
+                            "expirationDate": "2024-10-10",
+                            "pdfUrl": "<string>",
+                            "interestAmount": 0,
+                            "interestPercentage": 0,
+                            "interestStartDate": "2024-10-10",
+                            "interestType": "FIXED",
+                            "lateFeeAmount": 0,
+                            "lateFeePercentage": 0,
+                            "lateFeeStartDate": "2024-10-10",
+                            "lateFeeType": "FIXED",
+                            "paymentLimitDate": "2024-10-10",
+                          },
+                          "splits": [
+                            {
+                              "subaccountId": "beff457d-e893-49df-8395-e8b67ab21e7c",
+                              "splitType": "percentage",
+                              "splitPercentage": 29.33,
+                              "liquidAmount": 2933,
+                              "chargebackLiable": false
+                            }
+                          ],
+                          "createdAt": "2025-06-09T19:14:20.125Z",
+                          "updatedAt": "2025-06-09T19:14:20.125Z"
+                        },
+                        "message": "Pagamento criado com sucesso"
+                      }
                     }
                   }
                 }
