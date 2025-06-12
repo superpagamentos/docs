@@ -3807,6 +3807,11 @@
       },
       "/payments": {
         "post": {
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
           "description": "Cria uma nova transação no método de pagamento selecionado. Essa rota pode ser utilizada para criar transações com cartão de crédito, cartão tokenizado, PIX e boleto. Também é possível realizar splits entre subcontas.\n\n**Tipos de pagamento disponíveis:**\n- Cartão de Crédito: Pagamento direto com cartão de crédito, requerendo dados completos do cliente, endereço e cartão\n- Cartão Tokenizado: Pagamento com cartão de crédito previamente tokenizado\n- PIX: Pagamento instantâneo via PIX\n- Boleto: Geração de boleto bancário",
           "requestBody": {
             "description": "Payload para criação de um novo pagamento. O tipo de pagamento determina a estrutura específica dos dados necessários.",
@@ -4401,7 +4406,8 @@
                           },
                           "status": {
                             "type": "string",
-                            "example": "SUCCEEDED"
+                            "example": "SUCCEEDED",
+                            "enum": ["SUCCEEDED", "PENDING", "FAILED", "CREATED"]
                           },
                           "paymentMethod": {
                             "type": "string",
@@ -4607,24 +4613,19 @@
                           "currency": "BRL",
                           "amount": 5000,
                           "postbackUrl": "",
-                          "buyerDetails": {
-                            "firstName": "Maria",
-                            "lastName": "Santos",
-                            "email": "maria.santos@email.com",
-                            "document": "98765432109",
-                            "phone": null,
-                            "street": "Avenida Principal",
-                            "streetNumber": 456,
-                            "neighborhood": "Jardim",
-                            "complement": null,
-                            "reference": null,
-                            "city": "Rio de Janeiro",
-                            "state": "RJ"
-                          },
                           "pixDetails": {
                             "qrCode": "00020126580014BR.GOV.BCB.PIX0136123e4567-e89b-12d3-a456-426614174000520400005303986540599.905802BR5915NOME DO RECEBEDOR6008BRASILIA62070503***6304E2CA",
                             "qrCodeImage": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
                           },
+                          "splits": [
+                            {
+                              "subaccountId": "beff457d-e893-49df-8395-e8b67ab21e7c",
+                              "splitType": "percentage",
+                              "splitPercentage": 29.33,
+                              "liquidAmount": 2933,
+                              "chargebackLiable": false
+                            }
+                          ],
                           "createdAt": "2025-06-09T19:14:20.125Z",
                           "updatedAt": "2025-06-09T19:14:20.125Z"
                         },
