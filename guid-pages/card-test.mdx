@@ -1,0 +1,65 @@
+---
+title: "Cartões para Testes"
+---
+
+Para facilitar o desenvolvimento e testes de integração, disponibilizamos cartões de teste que simulam diferentes cenários de transações. Estes cartões são exclusivos para uso no ambiente sandbox.
+
+<Warning>
+    Estes cartões são apenas para testes e não devem ser utilizados em ambiente de produção.
+</Warning>
+
+## Cartões Disponíveis
+
+### Visa (Crédito) - Transação Aprovada
+```
+Número: 4716588836362104
+Bandeira: Visa
+Tipo: Crédito
+Cenário: Simula transação aprovada
+```
+
+### MasterCard (Crédito) - Transação Aprovada
+```
+Número: 5577270004286630
+Bandeira: MasterCard
+Tipo: Crédito
+Cenário: Simula transação aprovada
+```
+
+### MasterCard (Crédito) - Transação Recusada
+```
+Número: 6011457819940087
+Bandeira: MasterCard
+Tipo: Crédito
+Cenário: Simula transação recusada
+```
+
+## Informações Adicionais
+
+Para todos os cartões de teste, você pode utilizar:
+- **Data de Validade**: Qualquer data futura
+- **CVV**: Qualquer número de 3 dígitos
+- **Nome do Titular**: Qualquer nome
+- **CPF/CNPJ**: Qualquer número válido
+
+<Note>
+    Estes cartões são específicos para o ambiente sandbox e não funcionarão em ambiente de produção. Utilize-os apenas para testes de integração.
+</Note>
+
+## Exemplo de Uso
+
+```json
+{
+  "cardData": {
+    "holderName": "Teste da Silva",
+    "cardNumber": "4716588836362104",
+    "expirationMonth": "12",
+    "expirationYear": "2025",
+    "securityCode": "123"
+  }
+}
+```
+
+<Warning>
+    Lembre-se de que estes cartões são apenas para testes e não realizam transações reais. Eles são uma ferramenta importante para validar sua integração antes de ir para produção.
+</Warning>

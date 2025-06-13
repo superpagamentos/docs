@@ -20,7 +20,8 @@
               "guid-pages/support-guide",
               "guid-pages/environments",
               "guid-pages/authentication",
-              "guid-pages/errors-guide"
+              "guid-pages/errors-guide",
+              "guid-pages/card-test"
             ]
           }
         ]
