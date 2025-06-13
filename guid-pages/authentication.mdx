@@ -1,0 +1,90 @@
+---
+title: "Autenticação das APIs"
+---
+
+A Super utiliza autenticação via Bearer Token com JWT (JSON Web Token) para garantir a segurança das suas APIs. Este documento explica como funciona o processo de autenticação e como utilizá-lo corretamente.
+
+## Visão Geral
+
+- **Tipo de Autenticação**: Bearer Token (JWT)
+- **Tempo de Expiração**: 3600 segundos (1 hora)
+- **Formato do Token**: JWT (JSON Web Token)
+
+## Obtendo as Credenciais
+
+Para gerar um token de acesso, você precisará de duas credenciais essenciais:
+
+1. **Public Key**: Identificador público da sua conta
+2. **Secret Key**: Chave secreta para autenticação
+
+Estas credenciais podem ser encontradas na sua Dashboard da Super, na aba de integração.
+
+<Note>
+    Mantenha suas credenciais em segurança e nunca as compartilhe. A Secret Key é especialmente sensível e deve ser tratada como uma senha.
+</Note>
+
+## Expiração do Token
+
+Os tokens JWT têm um tempo de expiração de 1 hora (3600 segundos). Após este período, o token se torna inválido e você receberá um erro 401 (Unauthorized) ao tentar acessar as APIs.
+
+Exemplo de resposta de erro quando o token expira:
+
+```json
+{
+  "data": {
+    "message": "Unauthorized",
+    "statusCode": 401
+  }
+}
+```
+
+## Boas Práticas
+
+1. **Renovação Proativa**: Implemente a renovação do token antes da expiração
+2. **Tratamento de Erros**: Sempre trate o erro 401 adequadamente em sua aplicação
+3. **Armazenamento Seguro**: Armazene o token em memória e nunca em localStorage
+4. **Monitoramento**: Implemente logs para monitorar falhas de autenticação
+
+## Implementação
+
+Para implementar a autenticação em sua aplicação, consulte nossa [API Reference de Autenticação](/api-reference/endpoint/authentication/auth) que contém exemplos detalhados de como gerar e utilizar o token.
+
+<Warning>
+    Nunca exponha sua Secret Key no código frontend ou em repositórios públicos. Utilize variáveis de ambiente ou serviços de gerenciamento de segredos.
+</Warning>
+
+## Exemplo de Uso
+
+```javascript
+// Exemplo de como utilizar o token em uma requisição
+const headers = {
+  'Authorization': `Bearer ${seuTokenJWT}`,
+  'Content-Type': 'application/json'
+};
+
+// Exemplo de requisição
+fetch('https://api.superpagamentos.com/v1/seu-endpoint', {
+  method: 'GET',
+  headers: headers
+});
+```
+
+## Troubleshooting
+
+### Problemas Comuns
+
+1. **Token Expirado**
+   - Sintoma: Erro 401
+   - Solução: Gerar um novo token
+
+2. **Credenciais Inválidas**
+   - Sintoma: Erro 401
+   - Solução: Verificar Public Key e Secret Key
+
+3. **Token Mal Formatado**
+   - Sintoma: Erro 401
+   - Solução: Verificar se o token está sendo enviado corretamente no header
+
+<Note>
+    Em caso de dúvidas ou problemas com a autenticação, entre em contato com nosso suporte técnico.
+</Note>

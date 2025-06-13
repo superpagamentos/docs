@@ -17,7 +17,8 @@
             "group": "Introdução e Aspectos Gerais",
             "pages": [
               "introduction",
-              "guid-pages/environments"
+              "guid-pages/environments",
+              "guid-pages/authentication"
             ]
           }
         ]
