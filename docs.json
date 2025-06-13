@@ -17,8 +17,10 @@
             "group": "Introdução e Aspectos Gerais",
             "pages": [
               "introduction",
+              "guid-pages/support-guide",
               "guid-pages/environments",
-              "guid-pages/authentication"
+              "guid-pages/authentication",
+              "guid-pages/errors-guide"
             ]
           }
         ]

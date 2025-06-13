@@ -1,0 +1,156 @@
+---
+title: "Guia de Erros"
+---
+
+Este documento lista todos os possíveis códigos de erro que podem ser retornados pelas APIs da Super. Os erros são retornados no parâmetro `returnCode` e estão organizados por categorias para facilitar a identificação e resolução de problemas.
+
+## Erros de Autenticação
+
+| Código | Descrição | Causa Provável |
+|--------|-----------|----------------|
+| -1000 | USER_NOT_FOUND | Usuário não encontrado no sistema |
+| -1100 | USER_NOT_PERMITTED | Usuário não está permitido |
+| -1200 | INVALID_KEYS | Chaves de autenticação inválidas |
+| -1300 | INVALID_REFRESHTOKEN | Token de atualização inválido |
+| -1400 | INVALID_PHONE_NUMBER | Número de telefone inválido |
+| -1500 | INVALID_RESET_TOKEN_PASSWORD | Token de redefinição de senha inválido |
+| -1800 | COMPANY_NOT_APPROVED | Empresa ainda não foi aprovada |
+
+## Erros do Sistema
+
+| Código | Descrição | Causa Provável |
+|--------|-----------|----------------|
+| -9999 | UNEXPECTED_ERROR | Erro inesperado no sistema |
+| -7000 | UNEXPECTED_PARAMS_ERROR | Erro inesperado em parâmetros do sistema |
+
+## Erros internos
+
+| Código | Descrição | Causa Provável |
+|--------|-----------|----------------|
+| -7200 | SELLER_ALREADY_EXISTS | Vendedor já existe no sistema |
+| -7201 | INVALID_SELLER_DATA | Dados do vendedor inválidos |
+| -7202 | SELLER_CREATION_FAILED | Falha ao criar vendedor |
+| -7203 | SELLER_NOT_FOUND | Vendedor não encontrado |
+| -7204 | SELLER_UPDATE_FAILED | Falha ao atualizar vendedor |
+| -7205 | SELLER_DELETE_FAILED | Falha ao deletar vendedor |
+| -7206 | SELLER_DOCUMENT_ALREADY_EXISTS | Documento do vendedor já existe |
+| -7207 | CUSTOMER_CREATION_FAILED | Falha ao criar cliente |
+| -7208 | CARD_TOKENIZATION_FAILED | Falha na tokenização do cartão |
+| -7209 | CARD_TOKENIZATION_FAILED_INVALID_CARD_NUMBER | Número do cartão inválido |
+| -7210 | SUSPEND_SUBSCRIPTION_ERROR_IN | Erro ao suspender assinatura |
+| -7211 | REACTIVATE_SUBSCRIPTION_ERROR_IN | Erro ao reativar assinatura |
+| -7212 | UPDATE_SUBSCRIPTION_ERROR_IN | Erro ao atualizar assinatura |
+| -7213 | REMOVE_SUBSCRIPTION_ERROR_IN | Erro ao remover assinatura |
+| -7214 | CREATE_PIX_PAYMENT_ERROR | Erro ao criar pagamento PIX |
+| -7215 | CREATE_CARD_PAYMENT_ERROR | Erro ao criar pagamento com cartão |
+| -7216 | CREATE_BANK_ACCOUNT_ERROR_IN | Erro ao criar conta bancária |
+| -7217 | INVALID_CARD_NUMBER | Número do cartão inválido |
+| -7218 | CREATE_BILLET_PAYMENT_ERROR | Erro ao criar pagamento via boleto |
+| -7219 | INVALID_CUSTOMER_DATA | Dados do cliente inválidos |
+| -7220 | INVALID_ADDRESS_DATA | Dados do endereço inválidos |
+| -7221 | INVALID_LATE_FEE_DATA | Dados de multa inválidos |
+| -7222 | INVALID_INTEREST_DATA | Dados de juros inválidos |
+| -7223 | INSUFFICIENT_BALANCE | Saldo insuficiente |
+
+## Erros de Subconta
+
+| Código | Descrição | Causa Provável |
+|--------|-----------|----------------|
+| -7300 | SUBCOMPANY_ALREADY_EXISTS | Subconta já existe |
+| -7301 | INVALID_SUBCOMPANY_DATA | Dados da subconta inválidos |
+| -7302 | SUBCOMPANY_CREATION_FAILED | Falha ao criar subconta |
+| -7303 | SUBCOMPANY_NOT_FOUND | Subconta não encontrada |
+| -7304 | SUBCOMPANY_UPDATE_FAILED | Falha ao atualizar subconta |
+| -7305 | SUBCOMPANY_DELETE_FAILED | Falha ao deletar subconta |
+| -7306 | SUBCOMPANY_INTERN_CREATION_FAILED | Falha ao criar subconta internamente |
+| -7307 | SUBCOMPANY_BANK_ACCOUNT_CREATION_FAILED | Falha ao criar conta bancária da subconta |
+| -7308 | SUBCOMPANY_NOT_APPROVED | Subconta não aprovada |
+
+## Erros de Conta Bancária
+
+| Código | Descrição | Causa Provável |
+|--------|-----------|----------------|
+| -7100 | BANK_ACCOUNT_NOT_FOUND | Conta bancária não encontrada |
+| -7101 | BANK_ACCOUNT_NOT_BELONGS_TO_COMPANY | Conta bancária não pertence à empresa |
+| -7102 | INVALID_BANK_ACCOUNT_DATA | Dados da conta bancária inválidos |
+| -7001 | CANNOT_DELETE_LAST_ACCOUNT | Não é possível deletar a última conta |
+
+## Erros de Cliente
+
+| Código | Descrição | Causa Provável |
+|--------|-----------|----------------|
+| -7400 | CUSTOMER_NOT_FOUND | Cliente não encontrado |
+| -7401 | CUSTOMER_NOT_BELONGS_TO_COMPANY | Cliente não pertence à empresa |
+| -7402 | INVALID_CUSTOMER_DATA | Dados do cliente inválidos |
+| -7403 | CUSTOMER_CREATION_FAILED | Falha ao criar cliente |
+| -7404 | CUSTOMER_UPDATE_FAILED | Falha ao atualizar cliente |
+| -7405 | CUSTOMER_DELETE_FAILED | Falha ao deletar cliente |
+| -7406 | CUSTOMER_ADDRESS_NOT_FOUND | Endereço do cliente não encontrado |
+
+## Erros de Cartão
+
+| Código | Descrição | Causa Provável |
+|--------|-----------|----------------|
+| -7500 | INVALID_CARD_DATA | Dados do cartão inválidos |
+| -7501 | CARD_TOKENIZATION_FAILED | Falha na tokenização do cartão |
+| -7502 | CARD_IS_EXPIRED | Cartão expirado |
+| -7503 | CARD_IS_INVALID | Cartão inválido |
+| -7504 | CARD_IS_BLOCKED | Cartão bloqueado |
+| -7505 | CARD_IS_FRAUD | Cartão marcado como fraude |
+| -7506 | CARD_IS_LOST | Cartão reportado como perdido |
+| -7507 | CARD_IS_STOLEN | Cartão reportado como roubado |
+| -7508 | CARD_NOT_FOUND | Cartão não encontrado |
+| -7509 | CARD_DELETION_FAILED | Falha ao deletar cartão |
+
+## Erros de Assinatura
+
+| Código | Descrição | Causa Provável |
+|--------|-----------|----------------|
+| -7600 | SUBSCRIPTION_CREATION_FAILED | Falha ao criar assinatura |
+| -7601 | SUBSCRIPTION_NOT_FOUND | Assinatura não encontrada |
+| -7602 | SUBSCRIPTION_UPDATE_FAILED | Falha ao atualizar assinatura |
+| -7603 | SUBSCRIPTION_DELETE_FAILED | Falha ao deletar assinatura |
+| -7604 | INVALID_SUBSCRIPTION_DATA | Dados da assinatura inválidos |
+| -7605 | SPLIT_AMOUNT_EXCEEDS_SUBSCRIPTION | Valor do split excede o valor da assinatura |
+| -7606 | SPLIT_PERCENTAGE_NOT_FOUND | Percentual do split não encontrado |
+| -7607 | SPLIT_AMOUNT_NOT_FOUND | Valor do split não encontrado |
+| -7608 | SELLER_ID_NOT_FOUND | ID do vendedor não encontrado |
+| -7609 | INTERN_PLAN_CREATION_FAILED | Falha ao criar plano internamente |
+| -7610 | INTERN_SUBSCRIPTION_CREATION_FAILED | Falha ao criar assinatura internamente |
+| -7611 | CUSTOMER_NOT_FOUND | Cliente não encontrado |
+| -7612 | TOKENIZED_CARD_NOT_FOUND | Cartão tokenizado não encontrado |
+| -7613 | SUBSCRIPTION_NOT_BELONGS_TO_COMPANY | Assinatura não pertence à empresa |
+| -7614 | INTERN_ERROR | Erro na integração interna |
+| -7615 | INVALID_DATE_FORMAT | Formato de data inválido |
+| -7616 | INVALID_DATE | Data inválida |
+| -7617 | SUBSCRIPTION_ALREADY_SUSPENDED | Assinatura já está suspensa |
+| -7618 | SUBSCRIPTION_NOT_SUSPENDED | Assinatura não está suspensa |
+| -7619 | SUBSCRIPTION_NOT_REACTIVATED | Assinatura não foi reativada |
+| -7620 | REMOVE_SPLIT_ERROR | Erro ao remover split |
+| -7621 | SPLIT_NOT_FOUND | Split não encontrado |
+| -7622 | ADD_SPLIT_ERROR | Erro ao adicionar split |
+| -7623 | SUBSCRIPTION_NOT_DELETED | Assinatura não foi deletada |
+| -7624 | SUBSCRIPTION_ALREADY_DELETED | Assinatura já foi deletada |
+| -7625 | REMOVE_SUBSCRIPTION_ERROR | Erro ao remover assinatura |
+| -7626 | SUBSCRIPTION_IS_CANCELED | Assinatura está cancelada |
+| -7627 | SUBSCRIPTION_IS_DELETED | Assinatura está deletada |
+
+## Erros de Pagamento
+
+| Código | Descrição | Causa Provável |
+|--------|-----------|----------------|
+| -7700 | INVALID_PAYMENT_METHOD | Método de pagamento inválido |
+| -7701 | SPLIT_AMOUNT_EXCEEDS_TRANSACTION | Valor do split excede o valor da transação |
+| -7702 | INVALID_CUSTOMER_DATA | Dados do cliente inválidos |
+| -7703 | INVALID_CARD_DATA | Dados do cartão inválidos |
+| -7704 | INVALID_BILLING_DATA | Dados de cobrança inválidos |
+| -7705 | INVALID_SPLIT_DATA | Dados do split inválidos |
+| -7706 | INVALID_LATE_FEE_DATA | Dados de multa inválidos |
+| -7707 | INVALID_INTEREST_DATA | Dados de juros inválidos |
+| -7708 | PAYMENT_NOT_FOUND | Pagamento não encontrado |
+| -7709 | INVALID_PAYMENT_STATUS | Status do pagamento inválido |
+| -7710 | REFUND_FAILED | Falha ao realizar reembolso |
+
+<Note>
+    Em caso de dúvidas sobre algum código de erro específico, entre em contato com nosso suporte técnico.
+</Note>
