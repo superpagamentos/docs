@@ -4938,6 +4938,220 @@
             }
           }
         }
+      },
+      "/payments/{paymentId}": {
+        "get": {
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "description": "Retorna os detalhes de uma transação específica pelo ID.",
+          "responses": {
+            "200": {
+              "description": "Transação encontrada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "5a2245d8-2e5c-4969-ad70-b38a6a8aec0d"
+                          },
+                          "status": {
+                            "type": "string",
+                            "example": "PENDING"
+                          },
+                          "paymentMethod": {
+                            "type": "string",
+                            "example": "billet"
+                          },
+                          "currency": {
+                            "type": "string",
+                            "example": "BRL"
+                          },
+                          "amount": {
+                            "type": "integer",
+                            "example": 9999
+                          },
+                          "postbackUrl": {
+                            "type": "string",
+                            "example": "https://suarota.exemple"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2025-06-12T03:36:12.977Z"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2025-06-12T03:36:12.977Z"
+                          },
+                          "splits": {
+                            "type": "array",
+                            "items": {
+                              "type": "object"
+                            },
+                            "example": []
+                          },
+                          "buyerDetails": {
+                            "type": "object",
+                            "properties": {
+                              "firstName": {
+                                "type": "string",
+                                "example": "João"
+                              },
+                              "lastName": {
+                                "type": "string",
+                                "example": "Silva"
+                              },
+                              "email": {
+                                "type": "string",
+                                "example": "cliente@exemplo.com"
+                              },
+                              "document": {
+                                "type": "string",
+                                "example": "12345678909"
+                              },
+                              "phone": {
+                                "type": "string",
+                                "example": "27999999999"
+                              },
+                              "street": {
+                                "type": "string",
+                                "example": "Rua Exemplo"
+                              },
+                              "streetNumber": {
+                                "type": "integer",
+                                "example": 123
+                              },
+                              "neighborhood": {
+                                "type": "string",
+                                "example": "Centro"
+                              },
+                              "complement": {
+                                "type": "string",
+                                "example": "Sala 1"
+                              },
+                              "reference": {
+                                "type": "string",
+                                "example": "Próximo ao mercado"
+                              },
+                              "city": {
+                                "type": "string",
+                                "example": "Vitória"
+                              },
+                              "state": {
+                                "type": "string",
+                                "example": "ES"
+                              }
+                            }
+                          },
+                          "billetDetails": {
+                            "type": "object",
+                            "properties": {
+                              "barcode": {
+                                "type": "string",
+                                "example": "23793391009000541473681000807503211100000009999"
+                              },
+                              "digitableLine": {
+                                "type": "string",
+                                "example": "23793391009000541473681000807503211100000009999"
+                              },
+                              "expirationDate": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-06-12T00:00:00+00:00"
+                              },
+                              "pdfUrl": {
+                                "type": "string",
+                                "example": "https://boletos.pagzoop.com/4f9f57c1a9de418cba8686e9a20bd300/f56360422a3f40c5b66b37f527941f22/684a4b2df102d957a32aabbf.html"
+                              },
+                              "interestAmount": {
+                                "type": "integer",
+                                "example": 9999
+                              },
+                              "interestPercentage": {
+                                "type": "string",
+                                "example": "0"
+                              },
+                              "interestStartDate": {
+                                "type": "string",
+                                "format": "date",
+                                "example": "2025-06-13"
+                              },
+                              "interestType": {
+                                "type": "string",
+                                "example": "DAILY_AMOUNT"
+                              },
+                              "lateFeeAmount": {
+                                "type": "integer",
+                                "example": 99
+                              },
+                              "lateFeePercentage": {
+                                "type": "string",
+                                "example": "0"
+                              },
+                              "lateFeeStartDate": {
+                                "type": "string",
+                                "format": "date",
+                                "example": "2025-06-13"
+                              },
+                              "lateFeeType": {
+                                "type": "string",
+                                "example": "FIXED"
+                              },
+                              "paymentLimitDate": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-06-12T00:00:00+00:00"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "message": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": null
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro ao buscar transação",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "example": "Pagamento não encontrado"
+                          },
+                          "returnCode": {
+                            "type": "integer",
+                            "example": -7708
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "components": {
