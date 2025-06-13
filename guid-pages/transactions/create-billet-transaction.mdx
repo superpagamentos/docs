@@ -1,0 +1,97 @@
+---
+title: "Gerando um Boleto Bancário"
+---
+
+Este guia detalha o processo de criação de boletos bancários através da nossa API, incluindo regras, limites e considerações importantes.
+
+## Campos Obrigatórios
+
+### Dados do Comprador
+É obrigatório informar os dados completos do comprador:
+- Dados de identificação
+- Endereço completo
+
+### Datas
+- **Data de Expiração**: Data em que o boleto vence
+- **Data Limite de Pagamento**: Data limite para pagamento sem acréscimos
+
+<Note>
+    A data limite de pagamento é utilizada como base para cálculo de juros e multa. Caso não seja informada uma data específica para início da cobrança de juros ou multa, estes começarão a ser cobrados no dia posterior ao limite de pagamento.
+</Note>
+
+## Limites e Valores
+
+### Valores Mínimos
+- **Boleto sem juros/multa**: R$ 3,00
+- **Boleto com juros/multa**: R$ 30,00
+
+### Valor Máximo
+- **Limite padrão**: R$ 10.000,00
+- **Valores acima do limite**: Necessário contato com suporte
+
+## Multa por Atraso
+
+### Regulamentação
+De acordo com o artigo 52, parágrafo primeiro do Código de Defesa do Consumidor (Lei 8.078/90), a cobrança da multa não pode ser maior que 2% do valor do boleto.
+
+### Tipos de Multa
+1. **Percentual**: Calculado sobre o valor do boleto
+2. **Valor Fixo**: Valor determinado em reais
+
+### Exemplo Prático
+```
+Valor do Boleto: R$ 100,00
+Multa (2%): R$ 2,00
+Valor com Multa: R$ 102,00
+```
+
+## Juros de Mora
+
+### Regulamentação
+Conforme o art. 406 do Código Civil e artigo 161, parágrafo primeiro, do Código Tributário Nacional, os juros de mora devem ser cobrados no máximo 1% ao mês.
+
+### Cálculo Diário
+- Taxa mensal: 1%
+- Dias no mês comercial: 30
+- Taxa diária: 0,033% (1% ÷ 30)
+
+### Exemplo Prático
+```
+Valor do Boleto: R$ 100,00
+Dias em atraso: 10
+Cálculo: 0,033% × 10 dias = 0,33%
+Valor dos Juros: R$ 0,33
+```
+
+### Tipos de Cobrança de Juros
+1. **Valor Fixo Diário**: Valor determinado em reais por dia
+2. **Percentual Diário**: Percentual aplicado diariamente
+3. **Percentual Mensal**: Percentual aplicado mensalmente
+
+### Valor Mínimo de Juros
+Para boletos com valor inferior a R$ 100,00:
+- Mínimo de 1 centavo ao dia
+- Totalizando 30 centavos ao mês
+
+## Exemplo Completo
+
+```
+Valor do Boleto: R$ 100,00
+Multa (2%): R$ 2,00
+Juros (10 dias): R$ 0,33
+Valor Total: R$ 102,33
+```
+
+## Referências Legais
+
+Para mais informações sobre as regulamentações, consulte:
+- [Código Tributário Nacional](https://www.planalto.gov.br/ccivil_03/leis/L5172.htm)
+- [Código de Defesa do Consumidor](https://www.planalto.gov.br/ccivil_03/leis/L8078.htm)
+
+<Warning>
+    É importante seguir todas as regulamentações legais ao configurar multas e juros em seus boletos. Em caso de dúvidas, consulte nossa equipe de suporte.
+</Warning>
+
+<Note>
+    Lembre-se que a aplicação de multas e juros é opcional, mas quando utilizada, deve seguir todas as regulamentações vigentes.
+</Note>

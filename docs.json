@@ -23,6 +23,12 @@
               "guid-pages/errors-guide",
               "guid-pages/card-test"
             ]
+          },
+          {
+            "group": "Transações",
+            "pages": [
+              "guid-pages/transactions/create-billet-transaction"
+            ]
           }
         ]
       },
