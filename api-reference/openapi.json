@@ -5152,6 +5152,242 @@
             }
           }
         }
+      },
+      "/payments/refund": {
+        "post": {
+          "description": "Realiza o estorno de uma transação. É importante notar que:\n\n- Apenas transações realizadas com cartão de crédito podem ser estornadas\n- É necessário possuir saldo disponível para realizar o estorno\n- O estorno não é possível se a transação já foi recebida em D+30, antecipada ou se alguma parcela foi paga (em caso de parcelamentos) e não possuir saldo disponível na conta!",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "transactionId",
+              "in": "path",
+              "description": "ID da transação que será reembolsada",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "Dados necessários para realizar o reembolso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "transactionId": {
+                      "type": "string",
+                      "description": "ID da transação que será reembolsada"
+                    }
+                  },
+                  "required": ["transactionId"]
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Reembolso realizado com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "0b64746e-d77b-4ff4-8b9d-272b7e5cbbb3"
+                          },
+                          "status": {
+                            "type": "string",
+                            "example": "REFUNDED"
+                          },
+                          "paymentMethod": {
+                            "type": "string",
+                            "example": "card"
+                          },
+                          "currency": {
+                            "type": "string",
+                            "example": "BRL"
+                          },
+                          "amount": {
+                            "type": "integer",
+                            "example": 10000
+                          },
+                          "postbackUrl": {
+                            "type": "string",
+                            "example": ""
+                          },
+                          "installments": {
+                            "type": "integer",
+                            "example": 10
+                          },
+                          "buyerDetails": {
+                            "type": "object",
+                            "properties": {
+                              "firstName": {
+                                "type": "string",
+                                "example": "Cliente"
+                              },
+                              "lastName": {
+                                "type": "string",
+                                "example": "Teste"
+                              },
+                              "email": {
+                                "type": "string",
+                                "example": "clienteteste@superpagamentos.com"
+                              },
+                              "document": {
+                                "type": "string",
+                                "example": "21671880056"
+                              },
+                              "phone": {
+                                "type": "string",
+                                "nullable": true,
+                                "example": null
+                              },
+                              "street": {
+                                "type": "string",
+                                "example": "Rua B"
+                              },
+                              "streetNumber": {
+                                "type": "integer",
+                                "example": 200
+                              },
+                              "neighborhood": {
+                                "type": "string",
+                                "example": "Jardins"
+                              },
+                              "complement": {
+                                "type": "string",
+                                "example": "Casa 10"
+                              },
+                              "reference": {
+                                "type": "string",
+                                "example": "Ao lado da padaria"
+                              },
+                              "city": {
+                                "type": "string",
+                                "example": "São Paulo"
+                              },
+                              "state": {
+                                "type": "string",
+                                "example": "SP"
+                              }
+                            }
+                          },
+                          "cardDetails": {
+                            "type": "object",
+                            "properties": {
+                              "brand": {
+                                "type": "string",
+                                "example": "Visa"
+                              },
+                              "first4Digits": {
+                                "type": "string",
+                                "example": "4716"
+                              },
+                              "last4Digits": {
+                                "type": "string",
+                                "example": "2104"
+                              },
+                              "expirationMonth": {
+                                "type": "string",
+                                "example": "10"
+                              },
+                              "expirationYear": {
+                                "type": "string",
+                                "example": "2031"
+                              }
+                            }
+                          },
+                          "splits": {
+                            "type": "array",
+                            "items": {
+                              "type": "object"
+                            },
+                            "example": []
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2025-06-09T20:59:45.597Z"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2025-06-09T20:59:45.597Z"
+                          }
+                        }
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Reembolso realizado com sucesso"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro ao realizar o reembolso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          },
+                          "returnCode": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "examples": {
+                    "Transação não encontrada": {
+                      "value": {
+                        "data": {
+                          "message": "Transação não encontrada",
+                          "returnCode": -7708
+                        }
+                      }
+                    },
+                    "Método de pagamento inválido": {
+                      "value": {
+                        "data": {
+                          "message": "Só é possível reembolsar transações feitas com cartão de crédito",
+                          "returnCode": -7700
+                        }
+                      }
+                    },
+                    "Transação não habilitada": {
+                      "value": {
+                        "data": {
+                          "message": "Essa transação não está habilitada para reembolso",
+                          "returnCode": -7709
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "components": {
