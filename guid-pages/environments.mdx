@@ -1,0 +1,52 @@
+---
+title: "Ambientes"
+---
+
+A Super disponibiliza dois ambientes para integração com suas APIs: Sandbox e Produção. Cada ambiente possui características específicas e é recomendado para diferentes fases do desenvolvimento.
+
+## Ambiente Sandbox
+
+O ambiente Sandbox é o ambiente de desenvolvimento e testes, disponível através da URL base:
+```
+https://sandbox-api.superpagamentos.com
+```
+
+### Características do Ambiente Sandbox
+
+- Ambiente ideal para desenvolvimento e testes
+- Algumas funcionalidades podem estar indisponíveis
+- Alguns dados podem retornar respostar simuladas e/ou adaptadas para fins de testes
+
+<Warning>
+    Em ambiente sandbox, subcontas necessitam de aprovação manual da equipe de suporte. Entre em contato para aprovarmos sua subconta
+</Warning>
+
+<Note>
+    Para ter acesso ao ambiente sandbox, será necessário enviar uma solicitação com E-mail e CNPJ para a equipe de suporte
+</Note>
+
+## Ambiente de Produção
+
+O ambiente de Produção é o ambiente oficial para operações reais, disponível através da URL base:
+```
+https://api.superpagamentos.com
+```
+
+### Características do Ambiente de Produção
+
+- Ambiente para operações reais
+- Todas as funcionalidades disponíveis
+- Dados reais e transações efetivas
+- Processamento em tempo real
+
+## Recomendações
+
+Recomendamos fortemente o uso do ambiente Sandbox durante todo o processo de desenvolvimento e testes. O time de suporte da Super está disponível em tempo integral para auxiliar na integração das APIs neste ambiente.
+
+### Fluxo de Desenvolvimento Recomendado
+
+1. Inicie o desenvolvimento no ambiente Sandbox
+2. Realize todos os testes necessários
+3. Certifique-se de que todas as integrações estão funcionando corretamente
+4. Após aprovação e homologação, migre para o ambiente de Produção
+5. Realize uma nova bateria de testes no ambiente de Produção

@@ -16,7 +16,8 @@
           {
             "group": "Introdução e Aspectos Gerais",
             "pages": [
-              "introduction"
+              "introduction",
+              "guid-pages/environments"
             ]
           }
         ]
@@ -121,13 +122,8 @@
       "anchors": [
         {
           "anchor": "WhatsApp de Suporte",
-          "href": "https://wa.me/+5527999971368",
+          "href": "https://wa.me/+5527933001841",
           "icon": "whatsapp"
-        },
-        {
-          "anchor": "Comunidade do Discord",
-          "href": "https://discord.gg/superpagamentos",
-          "icon": "discord"
         },
         {
           "anchor": "Canal do Youtube",
@@ -162,7 +158,6 @@
   "footer": {
     "socials": {
       "instagram": "https://www.instagram.com/superpagamentos",
-      "github": "https://github.com/Super-Pagamentos",
       "linkedin": "https://www.linkedin.com/company/super-pagamentos"
     }
   }
