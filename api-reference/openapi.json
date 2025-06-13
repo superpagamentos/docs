@@ -4738,6 +4738,205 @@
               }
             }
           }
+        },
+        "get": {
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "description": "Lista todas as transações realizadas pela empresa autenticada. Esta rota suporta paginação e filtros para facilitar a busca de transações específicas.",
+          "parameters": [
+            {
+              "name": "page",
+              "in": "query",
+              "description": "Número da página para paginação",
+              "schema": {
+                "type": "integer",
+                "default": 1
+              }
+            },
+            {
+              "name": "limit",
+              "in": "query",
+              "description": "Quantidade de itens por página",
+              "schema": {
+                "type": "integer",
+                "default": 10
+              }
+            },
+            {
+              "name": "status",
+              "in": "query",
+              "description": "Filtro por status da transação",
+              "schema": {
+                "type": "string",
+                "enum": ["PENDING", "SUCCEEDED", "FAILED", "CREATED", "REVERSED", "CANCELED", "PRE_AUTHORIZED", "DISPUTED", "CHARGEBACK", "PAID", "REFUNDED"]
+              }
+            },
+            {
+              "name": "paymentMethod",
+              "in": "query",
+              "description": "Filtro por método de pagamento",
+              "schema": {
+                "type": "string",
+                "enum": ["pix", "card", "billet"]
+              }
+            },
+            {
+              "name": "amount",
+              "in": "query",
+              "description": "Filtro por valor da transação",
+              "schema": {
+                "type": "number"
+              }
+            },
+            {
+              "name": "customerId",
+              "in": "query",
+              "description": "Filtro por ID do cliente",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "subscriptionId",
+              "in": "query",
+              "description": "Filtro por ID da assinatura",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Lista de transações retornada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/Transaction"
+                        }
+                      },
+                      "meta": {
+                        "type": "object",
+                        "properties": {
+                          "total": {
+                            "type": "integer",
+                            "example": 17
+                          },
+                          "page": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "limit": {
+                            "type": "integer",
+                            "example": 10
+                          },
+                          "totalPages": {
+                            "type": "integer",
+                            "example": 2
+                          }
+                        }
+                      },
+                      "message": {
+                        "type": "string",
+                        "nullable": true
+                      }
+                    }
+                  },
+                  "example": {
+                    "data": [
+                      {
+                        "id": "5a2245d8-2e5c-4969-ad70-b38a6a8aec0d",
+                        "status": "PENDING",
+                        "paymentMethod": "billet",
+                        "currency": "BRL",
+                        "amount": 9999,
+                        "postbackUrl": "https://api.exemplo.com/webhook",
+                        "createdAt": "2025-06-12T03:36:12.977Z",
+                        "updatedAt": "2025-06-12T03:36:12.977Z",
+                        "splits": [],
+                        "buyerDetails": {
+                          "firstName": "Maria",
+                          "lastName": "Silva",
+                          "email": "maria.silva@exemplo.com",
+                          "document": "12345678900",
+                          "phone": "11999999999",
+                          "street": "Avenida Paulista",
+                          "streetNumber": 1000,
+                          "neighborhood": "Bela Vista",
+                          "complement": "Sala 123",
+                          "reference": "Próximo ao metrô",
+                          "city": "São Paulo",
+                          "state": "SP"
+                        },
+                        "billetDetails": {
+                          "barcode": "23793391009000541473681000807503211100000009999",
+                          "digitableLine": "23793391009000541473681000807503211100000009999",
+                          "expirationDate": "2025-06-12T00:00:00+00:00",
+                          "pdfUrl": "https://api.exemplo.com/boletos/123456",
+                          "interestAmount": 9999,
+                          "interestPercentage": "0",
+                          "interestStartDate": "2025-06-13",
+                          "interestType": "DAILY_AMOUNT",
+                          "lateFeeAmount": 99,
+                          "lateFeePercentage": "0",
+                          "lateFeeStartDate": "2025-06-13",
+                          "lateFeeType": "FIXED",
+                          "paymentLimitDate": "2025-06-12T00:00:00+00:00"
+                        }
+                      },
+                      {
+                        "id": "0b64746e-d77b-4ff4-8b9d-272b7e5cbbb3",
+                        "status": "SUCCEEDED",
+                        "paymentMethod": "card",
+                        "currency": "BRL",
+                        "amount": 10000,
+                        "postbackUrl": "",
+                        "createdAt": "2025-06-09T20:59:45.597Z",
+                        "updatedAt": "2025-06-09T20:59:45.597Z",
+                        "splits": [],
+                        "installments": 10,
+                        "buyerDetails": {
+                          "firstName": "João",
+                          "lastName": "Santos",
+                          "email": "joao.santos@exemplo.com",
+                          "document": "98765432100",
+                          "phone": "11988888888",
+                          "street": "Rua Augusta",
+                          "streetNumber": 500,
+                          "neighborhood": "Consolação",
+                          "complement": "Apto 45",
+                          "reference": "Edifício Comercial",
+                          "city": "São Paulo",
+                          "state": "SP"
+                        },
+                        "cardDetails": {
+                          "brand": "Mastercard",
+                          "first4Digits": "5555",
+                          "last4Digits": "1234",
+                          "expirationMonth": "12",
+                          "expirationYear": "2025"
+                        }
+                      }
+                    ],
+                    "meta": {
+                      "total": 17,
+                      "page": 1,
+                      "limit": 10,
+                      "totalPages": 2
+                    },
+                    "message": null
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },

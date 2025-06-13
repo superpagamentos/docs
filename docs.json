@@ -76,7 +76,8 @@
           {
             "group": "Transações",
             "pages": [
-              "api-reference/endpoint/transactions/generatepayment"
+              "api-reference/endpoint/transactions/generatepayment",
+              "api-reference/endpoint/transactions/list"
             ]
           },
           {
