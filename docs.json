@@ -29,7 +29,8 @@
             "pages": [
               "guid-pages/transactions/create-card-transaction",
               "guid-pages/transactions/create-pix-transaction",
-              "guid-pages/transactions/create-billet-transaction"
+              "guid-pages/transactions/create-billet-transaction",
+              "guid-pages/transactions/refund"
             ]
           }
         ]
