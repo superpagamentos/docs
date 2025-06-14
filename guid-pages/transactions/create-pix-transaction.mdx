@@ -1,0 +1,72 @@
+---
+title: "Gerando PIX Dinâmico"
+---
+
+O PIX Dinâmico é uma solução de pagamento instantâneo que permite a geração de códigos PIX únicos e temporários para cada transação. Diferente do PIX estático, o código PIX dinâmico é gerado especificamente para cada transação, oferecendo maior segurança e controle sobre os pagamentos.
+
+## Características Principais
+
+- **Pagamento Instantâneo**: Recebimento em tempo real
+- **Saque em D+0**: Valores disponíveis para saque imediatamente após o pagamento
+- **Código Único**: Cada transação gera um código PIX específico
+- **Maior Segurança**: Códigos temporários e específicos por transação
+
+## Limites e Valores
+
+### Valor Mínimo
+- **Transação PIX**: R$ 1,00
+
+## Processo de Geração
+
+Ao gerar uma transação PIX, você receberá:
+
+1. **Código PIX Copia e Cola**
+   - Pode ser copiado e colado no aplicativo do banco
+   - Formato compatível com todos os bancos
+
+2. **Código QR Code**
+   - Pode ser lido pela câmera do celular
+   - Compatível com aplicativos bancários
+
+## Status da Transação
+
+### Fluxo de Status
+1. **Pending**: Status inicial da transação
+2. **Paid**: Após confirmação do pagamento
+3. **Disputed**: Pedido em processo de conciliação (MED)
+4. **Refunded**: Transação reembolsada
+
+### Notificações
+- Webhook de confirmação enviado após o pagamento
+- Notificação enviada para:
+  - URL de postback configurada
+  - URL configurada nos webhooks
+
+<Warning>
+    É importante configurar corretamente as URLs de webhook para receber as notificações de pagamento.
+</Warning>
+
+<Note>
+    O código PIX gerado é válido por 24 horas. Após este período, é necessário gerar um novo código para a transação.
+</Note>
+
+## Boas Práticas
+
+1. **Configuração de Webhooks**
+   - Configure URLs de webhook confiáveis
+   - Implemente retry em caso de falha
+   - Valide as notificações recebidas
+
+2. **Tratamento de Status**
+   - Monitore o status das transações
+   - Implemente timeout para transações pendentes
+   - Mantenha histórico de transações
+
+3. **Segurança**
+   - Valide os dados recebidos
+   - Implemente autenticação nas URLs de webhook
+   - Mantenha logs de transações
+
+<Warning>
+    Sempre verifique o status da transação através do webhook antes de considerar o pagamento como confirmado.
+</Warning>
