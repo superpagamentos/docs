@@ -1,0 +1,97 @@
+---
+title: "Transação com Cartão de Crédito"
+---
+
+A Super oferece duas formas de processar pagamentos com cartão de crédito: autorização direta e cartão tokenizado. Cada método possui suas particularidades e requisitos específicos.
+
+## Métodos de Pagamento
+
+### 1. Autorização Direta
+Neste método, é necessário informar todos os dados do comprador e do cartão de crédito no momento da transação.
+
+<Warning>
+    Este método requer o envio de dados sensíveis do cartão. Certifique-se de que sua aplicação está em conformidade com as normas de segurança PCI DSS.
+</Warning>
+
+### 2. Cartão Tokenizado
+Método mais seguro que utiliza um cartão previamente tokenizado.
+
+#### Pré-requisitos
+- Cliente cadastrado com dados completos
+- Cartão de crédito tokenizado
+- Dados de cobrança
+
+<Note>
+    Para mais informações sobre cartões tokenizados, consulte o [artigo sobre tokenização de cartões](/guid-pages/tokenized-cards).
+</Note>
+
+## Bandeiras Aceitas
+
+- Mastercard
+- Visa
+- ELO
+- CredTodos
+- Diners Club
+- BanesCard
+- HiperCard
+- American Express
+
+## Parcelamento
+
+- **Máximo de parcelas**: 21 vezes
+- **Valor mínimo por parcela**: R$ 1,00
+
+<Note>
+    O número máximo de parcelas pode variar de acordo com o valor da transação.
+</Note>
+
+## Status das Transações
+
+1. **PENDING**
+   - Status inicial da transação
+   - Aguardando processamento
+
+2. **SUCCEEDED**
+   - Transação aprovada
+   - Pagamento confirmado
+
+3. **FAILED**
+   - Transação recusada
+   - Falha no processamento
+
+4. **CHARGEBACK**
+   - Em processo de conciliação
+   - Disputa iniciada
+
+5. **REFUNDED**
+   - Transação reembolsada
+   - Valor devolvido ao cliente
+
+## Reembolsos
+
+Transações com cartão de crédito podem ser reembolsadas, seguindo as condições estabelecidas.
+
+<Note>
+    Para mais informações sobre reembolsos, consulte o [artigo sobre estornos](/guid-pages/refunds).
+</Note>
+
+## Boas Práticas
+
+1. **Segurança**
+   - Utilize HTTPS para todas as requisições
+   - Não armazene dados do cartão
+   - Implemente validações de dados
+
+2. **Tratamento de Erros**
+   - Monitore os status das transações
+   - Implemente retry para falhas temporárias
+   - Mantenha logs de transações
+
+3. **Experiência do Usuário**
+   - Informe claramente o status da transação
+   - Forneça feedback imediato
+   - Mantenha o usuário informado sobre o processo
+
+<Warning>
+    Para transações com cartão de crédito, é fundamental implementar um sistema robusto de tratamento de erros e monitoramento de status.
+</Warning>
