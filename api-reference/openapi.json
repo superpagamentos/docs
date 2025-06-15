@@ -5388,6 +5388,67 @@
             }
           }
         }
+      },
+      "/withdrawals/balance": {
+        "get": {
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "description": "Retorna os saldos disponíveis para saque por tipo de transação\n\n**Operação em subconta:**\nPara buscar os saldos disponíveis de uma subconta, inclua o header `x-subaccount-id` com o ID da subconta. Quando este header é fornecido, a operação será realizada no contexto da subconta especificada, em vez da conta principal autenticada.",
+          "parameters": [
+            {
+              "name": "x-subaccount-id",
+              "in": "header",
+              "description": "ID da subconta onde a operação será realizada. Quando fornecido, a operação será executada no contexto desta subconta específica.",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Saldos consultados com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "disponiblePixBalance": {
+                            "type": "number",
+                            "description": "Saldo disponível para saque de transações PIX"
+                          },
+                          "disponibleCardBalance": {
+                            "type": "number",
+                            "description": "Saldo disponível para saque de transações com cartão"
+                          },
+                          "disponibleBilletBalance": {
+                            "type": "number",
+                            "description": "Saldo disponível para saque de transações com boleto"
+                          },
+                          "withdrawalsInProcessingBalance": {
+                            "type": "number",
+                            "description": "Saldo em processamento de saques"
+                          }
+                        }
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Saldos bancários"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "components": {
