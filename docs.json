@@ -113,7 +113,8 @@
           {
             "group": "Saldo e Transferências",
             "pages": [
-              "api-reference/endpoint/withdrawals/balance"
+              "api-reference/endpoint/withdrawals/balance",
+              "api-reference/endpoint/withdrawals/withdraw"
             ]
           },
           {
