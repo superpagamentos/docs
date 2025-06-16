@@ -5458,7 +5458,19 @@
               "bearerAuth": []
             }
           ],
-          "description": "Cria uma nova solicitação de saque. O tipo de saque determina a estrutura específica dos dados necessários.",
+          "description": "Cria uma nova solicitação de saque. O tipo de saque determina a estrutura específica dos dados necessários.\n\n**Operação em subconta:**\nPara criar um saque em subconta, inclua o header `x-subaccount-id` com o ID da subconta. Quando este header é fornecido, a operação será realizada no contexto da subconta especificada, em vez da conta principal autenticada.",
+          "parameters": [
+            {
+              "name": "x-subaccount-id",
+              "in": "header",
+              "description": "ID da subconta onde a operação será realizada. Quando fornecido, a operação será executada no contexto desta subconta específica.",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          ],
           "requestBody": {
             "description": "Payload para criação de um novo saque. O tipo de saque determina a estrutura específica dos dados necessários.",
             "content": {
@@ -5496,6 +5508,11 @@
                           "type": "string",
                           "description": "Chave PIX",
                           "example": "1234567890"
+                        },
+                        "postbackUrl": {
+                          "type": "string",
+                          "description": "URL de callback para recebimento de notificações de saque",
+                          "example": "https://example.com/callback"
                         }
                       },
                       "additionalProperties": false
@@ -5520,6 +5537,11 @@
                           "type": "integer",
                           "description": "ID da conta bancária que receberá o saque",
                           "example": 1234567890
+                        },
+                        "postbackUrl": {
+                          "type": "string",
+                          "description": "URL de callback para recebimento de notificações de saque",
+                          "example": "https://example.com/callback"
                         }
                       },
                       "additionalProperties": false
@@ -5531,7 +5553,7 @@
                       "properties": {
                         "withdrawalMethod": {
                           "type": "string",
-                          "enum": ["card"],
+                          "enum": ["billet"],
                           "description": "Método de pagamento que terá o saldo debitado"
                         },
                         "amount": {
@@ -5544,6 +5566,11 @@
                           "type": "integer",
                           "description": "ID da conta bancária que receberá o saque",
                           "example": 1234567890
+                        },
+                        "postbackUrl": {
+                          "type": "string",
+                          "description": "URL de callback para recebimento de notificações de saque",
+                          "example": "https://example.com/callback"
                         }
                       },
                       "additionalProperties": false
