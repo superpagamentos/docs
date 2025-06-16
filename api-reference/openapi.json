@@ -5390,6 +5390,154 @@
           }
         }
       },
+      "/withdrawals": {
+        "get": {
+          "description": "Lista todas as solicitações de saque realizadas pela empresa autenticada.\n\n**Operação em subconta:**\nPara listar as solicitações de saque de uma subconta específica, inclua o header `x-subaccount-id` com o ID da subconta. Quando este header é fornecido, a operação será realizada no contexto da subconta especificada, em vez da conta principal autenticada.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "x-subaccount-id",
+              "in": "header",
+              "description": "ID da subconta onde a operação será realizada. Quando fornecido, a operação será executada no contexto desta subconta específica.",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            {
+              "name": "page",
+              "in": "query",
+              "description": "Número da página que deseja visualizar",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "default": 1,
+                "minimum": 1
+              }
+            },
+            {
+              "name": "limit",
+              "in": "query",
+              "description": "Quantidade de itens por página",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "default": 10,
+                "minimum": 1,
+                "maximum": 100
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Saldos consultados com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "format": "uuid",
+                              "description": "ID único do saque",
+                              "example": "0b64746e-d77b-4ff4-8b9d-272b7e5cbbb3"
+                            },
+                            "amount": {
+                              "type": "integer",
+                              "description": "Valor do saque em centavos",
+                              "example": 10000
+                            },
+                            "liquidAmount": {
+                              "type": "integer",
+                              "description": "Valor do saque em centavos já com a taxa de serviço",
+                              "example": 9900
+                            },
+                            "status": {
+                              "type": "string",
+                              "description": "Status do saque",
+                              "example": "PENDING",
+                              "enum": ["PENDING", "SUCCESS", "FAILED"]
+                            },
+                            "withdrawalPaymentType": {
+                              "type": "string",
+                              "description": "Método de pagamento",
+                              "example": "PIX",
+                              "enum": ["PIX", "CARD", "BILLET"]
+                            },
+                            "postbackUrl": {
+                              "type": "string",
+                              "description": "URL de callback para recebimento de notificações de saque",
+                              "example": "https://example.com/callback"
+                            },
+                            "pixKeyType": {
+                              "type": "string",
+                              "description": "Tipo da chave PIX",
+                              "example": "CPF",
+                              "enum": ["documentCpf", "documentCnpj", "email", "phone", "random"]
+                            },
+                            "pixKey": {
+                              "type": "string",
+                              "description": "Chave PIX",
+                              "example": "1234567890"
+                            },
+                            "createdAt": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "Data e hora de criação do saque",
+                              "example": "2025-06-09T20:59:45.597Z"
+                            },
+                            "updatedAt": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "Data e hora de atualização do saque",
+                              "example": "2025-06-09T20:59:45.597Z"
+                            }
+                          }
+                        }
+                      },
+                      "meta": {
+                        "type": "object",
+                        "properties": {
+                          "total": {
+                            "type": "integer",
+                            "example": 17
+                          }
+                        },
+                        "page": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "example": 10
+                        },
+                        "totalPages": {
+                          "type": "integer",
+                          "example": 2
+                        }
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Histórico de saques"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "/withdrawals/balance": {
         "get": {
           "security": [
@@ -5436,6 +5584,107 @@
                           "withdrawalsInProcessingBalance": {
                             "type": "number",
                             "description": "Saldo em processamento de saques"
+                          }
+                        }
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Saldos bancários"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/withdrawals/{withdrawalId}": {
+        "get": {
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "description": "Retorna os detalhes de um saque específico\n\n**Operação em subconta:**\nPara buscar os detalhes de um saque em subconta, inclua o header `x-subaccount-id` com o ID da subconta. Quando este header é fornecido, a operação será realizada no contexto da subconta especificada, em vez da conta principal autenticada.",
+          "parameters": [
+            {
+              "name": "x-subaccount-id",
+              "in": "header",
+              "description": "ID da subconta onde a operação será realizada. Quando fornecido, a operação será executada no contexto desta subconta específica.",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Detalhes do saque consultados com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "ID único do saque",
+                            "example": "0b64746e-d77b-4ff4-8b9d-272b7e5cbbb3"
+                          },
+                          "amount": {
+                            "type": "integer",
+                            "description": "Valor do saque em centavos",
+                            "example": 10000
+                          },
+                          "liquidAmount": {
+                            "type": "integer",
+                            "description": "Valor do saque em centavos já com a taxa de serviço",
+                            "example": 9900
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "Status do saque",
+                            "example": "PENDING",
+                            "enum": ["PENDING", "SUCCESS", "FAILED"]
+                          },
+                          "withdrawalPaymentType": {
+                            "type": "string",
+                            "description": "Método de pagamento",
+                            "example": "PIX",
+                            "enum": ["PIX", "CARD", "BILLET"]
+                          },
+                          "postbackUrl": {
+                            "type": "string",
+                            "description": "URL de callback para recebimento de notificações de saque",
+                            "example": "https://example.com/callback"
+                          },
+                          "pixKeyType": {
+                            "type": "string",
+                            "description": "Tipo da chave PIX",
+                            "example": "CPF",
+                            "enum": ["documentCpf", "documentCnpj", "email", "phone", "random"]
+                          },
+                          "pixKey": {
+                            "type": "string",
+                            "description": "Chave PIX",
+                            "example": "1234567890"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Data e hora de criação do saque",
+                            "example": "2025-06-09T20:59:45.597Z"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Data e hora de atualização do saque",
+                            "example": "2025-06-09T20:59:45.597Z"
                           }
                         }
                       },

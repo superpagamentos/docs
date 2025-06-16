@@ -113,20 +113,10 @@
           {
             "group": "Saldo e Transferências",
             "pages": [
+              "api-reference/endpoint/withdrawals/list",
               "api-reference/endpoint/withdrawals/balance",
+              "api-reference/endpoint/withdrawals/get",
               "api-reference/endpoint/withdrawals/withdraw"
-            ]
-          },
-          {
-            "group": "Antecipações de Recebíveis",
-            "pages": [
-              "api-reference/endpoint/receivable_advances/create"
-            ]
-          },
-          {
-            "group": "Webhooks",
-            "pages": [
-              "api-reference/endpoint/webhooks/create"
             ]
           }
         ]
